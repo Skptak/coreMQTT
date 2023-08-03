@@ -4,31 +4,32 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 /**
  * @file core_mqtt_state.c
  * @brief Implements the functions in core_mqtt_state.h.
  */
+#include "core_mqtt_state.h"
 #include <assert.h>
 #include <string.h>
-#include "core_mqtt_state.h"
 
 /* Include config defaults header to get default values of configs. */
 #include "core_mqtt_config_defaults.h"
@@ -46,14 +47,15 @@ static const size_t ZERO_SIZE_T = 0U;
 /**
  * @brief This macro depicts the invalid value for the state publishes.
  */
-#define MQTT_INVALID_STATE_COUNT    ( ~ZERO_SIZE_T )
+#define MQTT_INVALID_STATE_COUNT ( ~ZERO_SIZE_T )
 
 /**
  * @brief Create a 16-bit bitmap with bit set at specified position.
  *
  * @param[in] position The position at which the bit need to be set.
  */
-#define UINT16_BITMAP_BIT_SET_AT( position )    ( ( uint16_t ) 0x01U << ( ( uint16_t ) position ) )
+#define UINT16_BITMAP_BIT_SET_AT( position ) \
+    ( ( uint16_t ) 0x01U << ( ( uint16_t ) position ) )
 
 /**
  * @brief Set a bit in an 16-bit unsigned integer.
@@ -61,7 +63,9 @@ static const size_t ZERO_SIZE_T = 0U;
  * @param[in] x The 16-bit unsigned integer to set a bit.
  * @param[in] position The position at which the bit need to be set.
  */
-#define UINT16_SET_BIT( x, position )           ( ( x ) = ( uint16_t ) ( ( x ) | ( UINT16_BITMAP_BIT_SET_AT( position ) ) ) )
+#define UINT16_SET_BIT( x, position ) \
+    ( ( x ) = ( uint16_t ) ( ( x ) |  \
+                             ( UINT16_BITMAP_BIT_SET_AT( position ) ) ) )
 
 /**
  * @brief Macro for checking if a bit is set in a 16-bit unsigned integer.
@@ -69,12 +73,15 @@ static const size_t ZERO_SIZE_T = 0U;
  * @param[in] x The unsigned 16-bit integer to check.
  * @param[in] position Which bit to check.
  */
-#define UINT16_CHECK_BIT( x, position )         ( ( ( x ) & ( UINT16_BITMAP_BIT_SET_AT( position ) ) ) == ( UINT16_BITMAP_BIT_SET_AT( position ) ) )
+#define UINT16_CHECK_BIT( x, position )                       \
+    ( ( ( x ) & ( UINT16_BITMAP_BIT_SET_AT( position ) ) ) == \
+      ( UINT16_BITMAP_BIT_SET_AT( position ) ) )
 
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Test if a transition to new state is possible, when dealing with PUBLISHes.
+ * @brief Test if a transition to new state is possible, when dealing with
+ * PUBLISHes.
  *
  * @param[in] currentState The current state.
  * @param[in] newState State to transition to.
@@ -94,7 +101,8 @@ static bool validateTransitionPublish( MQTTPublishState_t currentState,
                                        MQTTQoS_t qos );
 
 /**
- * @brief Test if a transition to a new state is possible, when dealing with acks.
+ * @brief Test if a transition to a new state is possible, when dealing with
+ * acks.
  *
  * @param[in] currentState The current state.
  * @param[in] newState State to transition to.
@@ -124,7 +132,8 @@ static bool isPublishOutgoing( MQTTPubAckType_t packetType,
  * @param[out] pQos QoS retrieved from record.
  * @param[out] pCurrentState state retrieved from record.
  *
- * @return index of the packet id in the record if it exists, else the record length.
+ * @return index of the packet id in the record if it exists, else the record
+ * length.
  */
 static size_t findInRecord( const MQTTPubAckInfo_t * records,
                             size_t recordCount,
@@ -142,8 +151,7 @@ static size_t findInRecord( const MQTTPubAckInfo_t * records,
  * @param[in] records State record array.
  * @param[in] recordCount Length of record array.
  */
-static void compactRecords( MQTTPubAckInfo_t * records,
-                            size_t recordCount );
+static void compactRecords( MQTTPubAckInfo_t * records, size_t recordCount );
 
 /**
  * @brief Store a new entry in the state record.
@@ -244,10 +252,12 @@ static bool validateTransitionPublish( MQTTPublishState_t currentState,
     {
         case MQTTStateNull:
 
-            /* Transitions from null occur when storing a new entry into the record. */
+            /* Transitions from null occur when storing a new entry into the
+             * record. */
             if( opType == MQTT_RECEIVE )
             {
-                isValid = ( newState == MQTTPubAckSend ) || ( newState == MQTTPubRecSend );
+                isValid = ( newState == MQTTPubAckSend ) ||
+                          ( newState == MQTTPubRecSend );
             }
 
             break;
@@ -274,8 +284,8 @@ static bool validateTransitionPublish( MQTTPublishState_t currentState,
 
             break;
 
-        /* Below cases are for validating the resends of publish when a session is
-         * reestablished. */
+        /* Below cases are for validating the resends of publish when a session
+         * is reestablished. */
         case MQTTPubAckPending:
 
             /* When a session is reestablished, outgoing QoS1 publishes in state
@@ -332,15 +342,16 @@ static bool validateTransitionAck( MQTTPublishState_t currentState,
 
             /* Incoming publish, QoS 2.
              * There are 2 valid transitions possible.
-             * 1. MQTTPubRelPending -> MQTTPubCompSend : A PUBREL ack is received
-             *    when publish record state is MQTTPubRelPending. This is the
-             *    normal state transition without any connection interruptions.
+             * 1. MQTTPubRelPending -> MQTTPubCompSend : A PUBREL ack is
+             * received when publish record state is MQTTPubRelPending. This is
+             * the normal state transition without any connection interruptions.
              * 2. MQTTPubRelPending -> MQTTPubRelPending : Receiving a duplicate
              *    QoS2 publish can result in a transition to the same state.
              *    This can happen in the below state transition.
              *    1. Incoming publish received.
              *    2. PUBREC ack sent and state is now MQTTPubRelPending.
-             *    3. TCP connection failure and broker didn't receive the PUBREC.
+             *    3. TCP connection failure and broker didn't receive the
+             * PUBREC.
              *    4. Reestablished MQTT session.
              *    5. MQTT broker resent the un-acked publish.
              *    6. Publish is received when publish record state is in
@@ -358,9 +369,9 @@ static bool validateTransitionAck( MQTTPublishState_t currentState,
              * 1. MQTTPubCompSend -> MQTTPublishDone : A PUBCOMP ack is sent
              *    after receiving a PUBREL from broker. This is the
              *    normal state transition without any connection interruptions.
-             * 2. MQTTPubCompSend -> MQTTPubCompSend : Receiving a duplicate PUBREL
-             *    can result in a transition to the same state.
-             *    This can happen in the below state transition.
+             * 2. MQTTPubCompSend -> MQTTPubCompSend : Receiving a duplicate
+             * PUBREL can result in a transition to the same state. This can
+             * happen in the below state transition.
              *    1. A TCP connection failure happened before sending a PUBCOMP
              *       for an incoming PUBREL.
              *    2. Reestablished an MQTT session.
@@ -386,15 +397,15 @@ static bool validateTransitionAck( MQTTPublishState_t currentState,
             /* Outgoing publish, Qos 2.
              * There are 2 valid transitions possible.
              * 1. MQTTPubCompPending -> MQTTPublishDone : A PUBCOMP is received.
-             *    This marks the complete state transition for the publish packet.
-             *    This is the normal state transition without any connection
-             *    interruptions.
-             * 2. MQTTPubCompPending -> MQTTPubCompPending : Resending a PUBREL for
-             *    packets in state #MQTTPubCompPending can result in this
+             *    This marks the complete state transition for the publish
+             * packet. This is the normal state transition without any
+             * connection interruptions.
+             * 2. MQTTPubCompPending -> MQTTPubCompPending : Resending a PUBREL
+             * for packets in state #MQTTPubCompPending can result in this
              *    transition to the same state.
              *    This can happen in the below state transition.
-             *    1. A TCP connection failure happened before receiving a PUBCOMP
-             *       for an outgoing PUBREL.
+             *    1. A TCP connection failure happened before receiving a
+             * PUBCOMP for an outgoing PUBREL.
              *    2. An MQTT session is reestablished.
              *    3. Resending the un-acked PUBREL results in this transition
              *       to the same state. */
@@ -403,7 +414,8 @@ static bool validateTransitionAck( MQTTPublishState_t currentState,
             break;
 
         case MQTTPublishDone:
-        /* Done state should transition to invalid since it will be removed from the record. */
+        /* Done state should transition to invalid since it will be removed from
+         * the record. */
         case MQTTPublishSend:
         /* If an ack was sent/received we shouldn't have been in this state. */
         case MQTTStateNull:
@@ -477,8 +489,7 @@ static size_t findInRecord( const MQTTPubAckInfo_t * records,
 
 /*-----------------------------------------------------------*/
 
-static void compactRecords( MQTTPubAckInfo_t * records,
-                            size_t recordCount )
+static void compactRecords( MQTTPubAckInfo_t * records, size_t recordCount )
 {
     size_t index = 0;
     size_t emptyIndex = MQTT_INVALID_STATE_COUNT;
@@ -503,7 +514,8 @@ static void compactRecords( MQTTPubAckInfo_t * records,
                 /* Copy over the contents at non empty index to empty index. */
                 records[ emptyIndex ].packetId = records[ index ].packetId;
                 records[ emptyIndex ].qos = records[ index ].qos;
-                records[ emptyIndex ].publishState = records[ index ].publishState;
+                records[ emptyIndex ].publishState = records[ index ]
+                                                         .publishState;
 
                 /* Mark the record at current non empty index as invalid. */
                 records[ index ].packetId = MQTT_PACKET_ID_INVALID;
@@ -639,7 +651,8 @@ static uint16_t stateSelect( const MQTTContext_t * pMqttContext,
     while( *pCursor < maxCount )
     {
         /* Check if any of the search states are present. */
-        stateCheck = UINT16_CHECK_BIT( searchStates, records[ *pCursor ].publishState );
+        stateCheck = UINT16_CHECK_BIT( searchStates,
+                                       records[ *pCursor ].publishState );
 
         if( stateCheck == true )
         {
@@ -675,14 +688,16 @@ MQTTPublishState_t MQTT_CalculateStateAck( MQTTPubAckType_t packetType,
 
             /* Incoming publish: send PUBREC, PUBREL pending.
              * Outgoing publish: receive PUBREC, send PUBREL. */
-            calculatedState = ( opType == MQTT_SEND ) ? MQTTPubRelPending : MQTTPubRelSend;
+            calculatedState = ( opType == MQTT_SEND ) ? MQTTPubRelPending
+                                                      : MQTTPubRelSend;
             break;
 
         case MQTTPubrel:
 
             /* Incoming publish: receive PUBREL, send PUBCOMP.
              * Outgoing publish: send PUBREL, PUBCOMP pending. */
-            calculatedState = ( opType == MQTT_SEND ) ? MQTTPubCompPending : MQTTPubCompSend;
+            calculatedState = ( opType == MQTT_SEND ) ? MQTTPubCompPending
+                                                      : MQTTPubCompSend;
             break;
 
         case MQTTPubcomp:
@@ -722,27 +737,27 @@ static MQTTStatus_t updateStateAck( MQTTPubAckInfo_t * records,
      * is received for an outgoing QoS2 publish. When a PUBREC is received,
      * record is deleted and added back to the end of the records to maintain
      * ordering for PUBRELs. */
-    shouldDeleteRecord = ( newState == MQTTPublishDone ) || ( newState == MQTTPubRelSend );
+    shouldDeleteRecord = ( newState == MQTTPublishDone ) ||
+                         ( newState == MQTTPubRelSend );
     isTransitionValid = validateTransitionAck( currentState, newState );
 
     if( isTransitionValid == true )
     {
         status = MQTTSuccess;
 
-        /* Update record for acks. When sending or receiving acks for packets that
-         * are resent during a session reestablishment, the new state and
-         * current state can be the same. No update of record required in that case. */
+        /* Update record for acks. When sending or receiving acks for packets
+         * that are resent during a session reestablishment, the new state and
+         * current state can be the same. No update of record required in that
+         * case. */
         if( currentState != newState )
         {
-            updateRecord( records,
-                          recordIndex,
-                          newState,
-                          shouldDeleteRecord );
+            updateRecord( records, recordIndex, newState, shouldDeleteRecord );
 
-            /* For QoS2 messages, in order to preserve the message ordering, when
-             * a PUBREC is received for an outgoing publish, the record should be
-             * moved to the last. This move will help preserve the order in which
-             * a PUBREL needs to be resent in case of a session reestablishment. */
+            /* For QoS2 messages, in order to preserve the message ordering,
+             * when a PUBREC is received for an outgoing publish, the record
+             * should be moved to the last. This move will help preserve the
+             * order in which a PUBREL needs to be resent in case of a session
+             * reestablishment. */
             if( newState == MQTTPubRelSend )
             {
                 status = addRecord( records,
@@ -784,7 +799,10 @@ static MQTTStatus_t updateStatePublish( const MQTTContext_t * pMqttContext,
     /* This will always succeed for an incoming publish. This is due to the fact
      * that the passed in currentState must be MQTTStateNull, since
      * #MQTT_UpdateStatePublish does not perform a lookup for receives. */
-    isTransitionValid = validateTransitionPublish( currentState, newState, opType, qos );
+    isTransitionValid = validateTransitionPublish( currentState,
+                                                   newState,
+                                                   opType,
+                                                   qos );
 
     if( isTransitionValid == true )
     {
@@ -834,7 +852,8 @@ MQTTStatus_t MQTT_ReserveState( const MQTTContext_t * pMqttContext,
     {
         status = MQTTSuccess;
     }
-    else if( ( packetId == MQTT_PACKET_ID_INVALID ) || ( pMqttContext == NULL ) )
+    else if( ( packetId == MQTT_PACKET_ID_INVALID ) ||
+             ( pMqttContext == NULL ) )
     {
         status = MQTTBadParameter;
     }
@@ -865,11 +884,13 @@ MQTTPublishState_t MQTT_CalculateStatePublish( MQTTStateOperation_t opType,
             break;
 
         case MQTTQoS1:
-            calculatedState = ( opType == MQTT_SEND ) ? MQTTPubAckPending : MQTTPubAckSend;
+            calculatedState = ( opType == MQTT_SEND ) ? MQTTPubAckPending
+                                                      : MQTTPubAckSend;
             break;
 
         case MQTTQoS2:
-            calculatedState = ( opType == MQTT_SEND ) ? MQTTPubRecPending : MQTTPubRecSend;
+            calculatedState = ( opType == MQTT_SEND ) ? MQTTPubRecPending
+                                                      : MQTTPubRecSend;
             break;
 
         default:
@@ -966,8 +987,8 @@ MQTTStatus_t MQTT_RemoveStateRecord( const MQTTContext_t * pMqttContext,
     MQTTPublishState_t currentState;
     MQTTQoS_t qos = MQTTQoS0;
 
-
-    if( ( pMqttContext == NULL ) || ( ( pMqttContext->outgoingPublishRecords == NULL ) ) )
+    if( ( pMqttContext == NULL ) ||
+        ( ( pMqttContext->outgoingPublishRecords == NULL ) ) )
     {
         status = MQTTBadParameter;
     }
@@ -992,10 +1013,7 @@ MQTTStatus_t MQTT_RemoveStateRecord( const MQTTContext_t * pMqttContext,
         else
         {
             /* Delete the record. */
-            updateRecord( records,
-                          recordIndex,
-                          MQTTStateNull,
-                          true );
+            updateRecord( records, recordIndex, MQTTStateNull, true );
         }
     }
 

@@ -4,22 +4,23 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 /**
@@ -36,7 +37,8 @@
 /******* DO NOT CHANGE the following order ********/
 /**************************************************/
 
-/* Include logging header files and define logging macros in the following order:
+/* Include logging header files and define logging macros in the following
+ * order:
  * 1. Include the header file "logging_levels.h".
  * 2. Define the LIBRARY_LOG_NAME and LIBRARY_LOG_LEVEL macros depending on
  * the logging configuration for MQTT.
@@ -47,11 +49,11 @@
 
 /* Logging configuration for the MQTT library. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "MQTT"
+    #define LIBRARY_LOG_NAME "MQTT"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_NONE
+    #define LIBRARY_LOG_LEVEL LOG_NONE
 #endif
 
 #include "logging_stack.h"
@@ -61,13 +63,13 @@
 /**
  * @brief Retry count for reading CONNACK from network.
  *
- * #MQTT_Connect() can be using retries. If timeout passed as 0 to MQTT_Connect(),
- * retries are used to attempt to read from network. The maximum retry count is
- * specified by this config.
+ * #MQTT_Connect() can be using retries. If timeout passed as 0 to
+ * MQTT_Connect(), retries are used to attempt to read from network. The maximum
+ * retry count is specified by this config.
  *
  * These unit tests expect retrying only twice.
  */
-#define MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT    ( 2U )
+#define MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT ( 2U )
 
 /* Set network context to double pointer to buffer (uint8_t**). */
 struct NetworkContext
@@ -75,8 +77,8 @@ struct NetworkContext
     uint8_t ** buffer;
 };
 
-#define MQTT_SUB_UNSUB_MAX_VECTORS    ( 6U )
+#define MQTT_SUB_UNSUB_MAX_VECTORS ( 6U )
 
-#define MQTT_SEND_TIMEOUT_MS          ( 20U )
+#define MQTT_SEND_TIMEOUT_MS       ( 20U )
 
 #endif /* ifndef CORE_MQTT_CONFIG_H_ */

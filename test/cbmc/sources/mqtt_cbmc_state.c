@@ -4,35 +4,36 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 /**
  * @file mqtt_cbmc_state.c
  * @brief Implements the functions defined in mqtt_cbmc_state.h.
  */
+#include "mqtt_cbmc_state.h"
+#include "core_mqtt.h"
+#include "event_callback_stub.h"
+#include "get_time_stub.h"
+#include "network_interface_stubs.h"
 #include <stdint.h>
 #include <stdlib.h>
-#include "core_mqtt.h"
-#include "mqtt_cbmc_state.h"
-#include "network_interface_stubs.h"
-#include "get_time_stub.h"
-#include "event_callback_stub.h"
 
 /* An exclusive default bound on the subscription count. Iterating over possibly
  * SIZE_MAX number of subscriptions does not add any value to the proofs. An
@@ -40,7 +41,7 @@
  * handle. The proofs verify that the code can handle the maximum
  * topicFilterLength in each subscription. */
 #ifndef SUBSCRIPTION_COUNT_MAX
-    #define SUBSCRIPTION_COUNT_MAX    2U
+    #define SUBSCRIPTION_COUNT_MAX 2U
 #endif
 
 /* An exclusive default bound on the remainingLength in an incoming packet. This
@@ -49,7 +50,7 @@
  * unbounded remaining length amount of bytes to verify memory safety in the
  * dereferencing the SUBACK payload's bytes. */
 #ifndef REMAINING_LENGTH_MAX
-    #define REMAINING_LENGTH_MAX    CBMC_MAX_OBJECT_SIZE
+    #define REMAINING_LENGTH_MAX CBMC_MAX_OBJECT_SIZE
 #endif
 
 /**
@@ -67,7 +68,7 @@
  * @note This definition must exist in order to compile. 10U is a typical value
  * used in the MQTT demos.
  */
-#define MAX_UNACKED_PACKETS    ( 20U )
+#define MAX_UNACKED_PACKETS ( 20U )
 
 MQTTPacketInfo_t * allocateMqttPacketInfo( MQTTPacketInfo_t * pPacketInfo )
 {
@@ -90,7 +91,8 @@ bool isValidMqttPacketInfo( const MQTTPacketInfo_t * pPacketInfo )
 
     if( pPacketInfo != NULL )
     {
-        isValid = isValid && pPacketInfo->remainingLength < REMAINING_LENGTH_MAX;
+        isValid = isValid &&
+                  pPacketInfo->remainingLength < REMAINING_LENGTH_MAX;
     }
 
     return isValid;
@@ -128,7 +130,8 @@ MQTTConnectInfo_t * allocateMqttConnectInfo( MQTTConnectInfo_t * pConnectInfo )
 
     if( pConnectInfo != NULL )
     {
-        pConnectInfo->pClientIdentifier = malloc( pConnectInfo->clientIdentifierLength );
+        pConnectInfo->pClientIdentifier = malloc(
+            pConnectInfo->clientIdentifierLength );
         pConnectInfo->pUserName = malloc( pConnectInfo->userNameLength );
         pConnectInfo->pPassword = malloc( pConnectInfo->passwordLength );
     }
@@ -154,8 +157,8 @@ MQTTFixedBuffer_t * allocateMqttFixedBuffer( MQTTFixedBuffer_t * pFixedBuffer )
     {
         __CPROVER_assume( pFixedBuffer->size > 0 );
 
-        /* The buffer should be less than an signed 32-bit integer value since the
-         * transport interface cannot return more than that value. */
+        /* The buffer should be less than an signed 32-bit integer value since
+         * the transport interface cannot return more than that value. */
         __CPROVER_assume( pFixedBuffer->size < 0x7FFFFFFF );
 
         pFixedBuffer->pBuffer = malloc( pFixedBuffer->size );
@@ -171,19 +174,22 @@ bool isValidMqttFixedBuffer( const MQTTFixedBuffer_t * pFixedBuffer )
     return isValid;
 }
 
-MQTTSubscribeInfo_t * allocateMqttSubscriptionList( MQTTSubscribeInfo_t * pSubscriptionList,
-                                                    size_t subscriptionCount )
+MQTTSubscribeInfo_t * allocateMqttSubscriptionList(
+    MQTTSubscribeInfo_t * pSubscriptionList,
+    size_t subscriptionCount )
 {
     if( pSubscriptionList == NULL )
     {
-        pSubscriptionList = malloc( sizeof( MQTTSubscribeInfo_t ) * subscriptionCount );
+        pSubscriptionList = malloc( sizeof( MQTTSubscribeInfo_t ) *
+                                    subscriptionCount );
     }
 
     if( pSubscriptionList != NULL )
     {
         for( int i = 0; i < subscriptionCount; i++ )
         {
-            pSubscriptionList[ i ].pTopicFilter = malloc( pSubscriptionList[ i ].topicFilterLength );
+            pSubscriptionList[ i ].pTopicFilter = malloc(
+                pSubscriptionList[ i ].topicFilterLength );
         }
     }
 
@@ -217,9 +223,9 @@ MQTTContext_t * allocateMqttContext( MQTTContext_t * pContext )
 
     if( pTransportInterface != NULL )
     {
-        /* The possibility that recv and send callbacks are NULL is tested in the
-         * MQTT_Init proof. MQTT_Init is required to be called before any other
-         * function in core_mqtt.h. */
+        /* The possibility that recv and send callbacks are NULL is tested in
+         * the MQTT_Init proof. MQTT_Init is required to be called before any
+         * other function in core_mqtt.h. */
         pTransportInterface->recv = NetworkInterfaceReceiveStub;
         pTransportInterface->send = NetworkInterfaceSendStub;
         pTransportInterface->writev = NULL;
@@ -230,9 +236,10 @@ MQTTContext_t * allocateMqttContext( MQTTContext_t * pContext )
     __CPROVER_assume( outgoingAckListSize <= MAX_UNACKED_PACKETS );
     __CPROVER_assume( outgoingAckListSize > 0U );
 
-    /* Here, malloc can fail. If it does, then it is proper to update the number of entries
-     * in the array. */
-    pOutgoingAckList = malloc( outgoingAckListSize * sizeof( MQTTPubAckInfo_t ) );
+    /* Here, malloc can fail. If it does, then it is proper to update the number
+     * of entries in the array. */
+    pOutgoingAckList = malloc( outgoingAckListSize *
+                               sizeof( MQTTPubAckInfo_t ) );
 
     if( pOutgoingAckList == NULL )
     {
@@ -242,9 +249,10 @@ MQTTContext_t * allocateMqttContext( MQTTContext_t * pContext )
     __CPROVER_assume( incomingAckListSize <= MAX_UNACKED_PACKETS );
     __CPROVER_assume( incomingAckListSize > 0U );
 
-    /* Here, malloc can fail. If it does, then it is proper to update the number of entries
-     * in the array. */
-    pIncomingAckList = malloc( incomingAckListSize * sizeof( MQTTPubAckInfo_t ) );
+    /* Here, malloc can fail. If it does, then it is proper to update the number
+     * of entries in the array. */
+    pIncomingAckList = malloc( incomingAckListSize *
+                               sizeof( MQTTPubAckInfo_t ) );
 
     if( pIncomingAckList == NULL )
     {

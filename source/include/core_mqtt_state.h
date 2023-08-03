@@ -4,22 +4,23 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 /**
@@ -31,7 +32,7 @@
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
-    extern "C" {
+extern "C" {
 #endif
 /* *INDENT-ON* */
 
@@ -42,7 +43,7 @@
  * @brief Initializer value for an #MQTTStateCursor_t, indicating a search
  * should start at the beginning of a state record array
  */
-#define MQTT_STATE_CURSOR_INITIALIZER    ( ( size_t ) 0 )
+#define MQTT_STATE_CURSOR_INITIALIZER ( ( size_t ) 0 )
 
 /**
  * @ingroup mqtt_basic_types
@@ -64,7 +65,8 @@ typedef enum MQTTStateOperation
 /** @endcond */
 
 /**
- * @fn MQTTStatus_t MQTT_ReserveState( const MQTTContext_t * pMqttContext, uint16_t packetId, MQTTQoS_t qos );
+ * @fn MQTTStatus_t MQTT_ReserveState( const MQTTContext_t * pMqttContext,
+ * uint16_t packetId, MQTTQoS_t qos );
  * @brief Reserve an entry for an outgoing QoS 1 or Qos 2 publish.
  *
  * @param[in] pMqttContext Initialized MQTT context.
@@ -84,7 +86,8 @@ MQTTStatus_t MQTT_ReserveState( const MQTTContext_t * pMqttContext,
 /** @endcond */
 
 /**
- * @fn MQTTPublishState_t MQTT_CalculateStatePublish( MQTTStateOperation_t opType, MQTTQoS_t qos )
+ * @fn MQTTPublishState_t MQTT_CalculateStatePublish( MQTTStateOperation_t
+ * opType, MQTTQoS_t qos )
  * @brief Calculate the new state for a publish from its qos and operation type.
  *
  * @param[in] opType Send or Receive.
@@ -102,7 +105,9 @@ MQTTPublishState_t MQTT_CalculateStatePublish( MQTTStateOperation_t opType,
 /** @endcond */
 
 /**
- * @fn MQTTStatus_t MQTT_UpdateStatePublish( const MQTTContext_t * pMqttContext, uint16_t packetId, MQTTStateOperation_t opType, MQTTQoS_t qos, MQTTPublishState_t * pNewState );
+ * @fn MQTTStatus_t MQTT_UpdateStatePublish( const MQTTContext_t * pMqttContext,
+ * uint16_t packetId, MQTTStateOperation_t opType, MQTTQoS_t qos,
+ * MQTTPublishState_t * pNewState );
  * @brief Update the state record for a PUBLISH packet.
  *
  * @param[in] pMqttContext Initialized MQTT context.
@@ -127,7 +132,8 @@ MQTTStatus_t MQTT_UpdateStatePublish( const MQTTContext_t * pMqttContext,
 /** @endcond */
 
 /**
- * @fn MQTTStatus_t MQTT_RemoveStateRecord( const MQTTContext_t * pMqttContext, uint16_t packetId );
+ * @fn MQTTStatus_t MQTT_RemoveStateRecord( const MQTTContext_t * pMqttContext,
+ * uint16_t packetId );
  * @brief Remove the state record for a PUBLISH packet.
  *
  * @param[in] pMqttContext Initialized MQTT context.
@@ -145,7 +151,8 @@ MQTTStatus_t MQTT_RemoveStateRecord( const MQTTContext_t * pMqttContext,
 /** @endcond */
 
 /**
- * @fn MQTTPublishState_t MQTT_CalculateStateAck( MQTTPubAckType_t packetType, MQTTStateOperation_t opType, MQTTQoS_t qos );
+ * @fn MQTTPublishState_t MQTT_CalculateStateAck( MQTTPubAckType_t packetType,
+ * MQTTStateOperation_t opType, MQTTQoS_t qos );
  * @brief Calculate the state from a PUBACK, PUBREC, PUBREL, or PUBCOMP.
  *
  * @param[in] packetType PUBACK, PUBREC, PUBREL, or PUBCOMP.
@@ -165,7 +172,9 @@ MQTTPublishState_t MQTT_CalculateStateAck( MQTTPubAckType_t packetType,
 /** @endcond */
 
 /**
- * @fn MQTTStatus_t MQTT_UpdateStateAck( const MQTTContext_t * pMqttContext, uint16_t packetId, MQTTPubAckType_t packetType, MQTTStateOperation_t opType, MQTTPublishState_t * pNewState );
+ * @fn MQTTStatus_t MQTT_UpdateStateAck( const MQTTContext_t * pMqttContext,
+ * uint16_t packetId, MQTTPubAckType_t packetType, MQTTStateOperation_t opType,
+ * MQTTPublishState_t * pNewState );
  * @brief Update the state record for an ACKed publish.
  *
  * @param[in] pMqttContext Initialized MQTT context.
@@ -176,8 +185,8 @@ MQTTPublishState_t MQTT_CalculateStateAck( MQTTPubAckType_t packetType,
  *
  * @return #MQTTBadParameter if an invalid parameter is passed;
  * #MQTTBadResponse if the packet from the network is not found in the records;
- * #MQTTIllegalState if the requested update would result in an illegal transition;
- * #MQTTSuccess otherwise.
+ * #MQTTIllegalState if the requested update would result in an illegal
+ * transition; #MQTTSuccess otherwise.
  */
 
 /**
@@ -192,7 +201,8 @@ MQTTStatus_t MQTT_UpdateStateAck( const MQTTContext_t * pMqttContext,
 /** @endcond */
 
 /**
- * @fn uint16_t MQTT_PubrelToResend( const MQTTContext_t * pMqttContext, MQTTStateCursor_t * pCursor, MQTTPublishState_t * pState );
+ * @fn uint16_t MQTT_PubrelToResend( const MQTTContext_t * pMqttContext,
+ * MQTTStateCursor_t * pCursor, MQTTPublishState_t * pState );
  * @brief Get the packet ID of next pending PUBREL ack to be resent.
  *
  * This function will need to be called to get the packet for which a PUBREL
@@ -240,8 +250,8 @@ uint16_t MQTT_PubrelToResend( const MQTTContext_t * pMqttContext,
  * MQTTPublishInfo_t * pResendPublish = NULL;
  * MQTTConnectInfo_t connectInfo = { 0 };
  *
- * // This is assumed to have been initialized before the call to MQTT_Connect().
- * MQTTContext_t * pContext;
+ * // This is assumed to have been initialized before the call to
+ * MQTT_Connect(). MQTTContext_t * pContext;
  *
  * // Set clean session to false to attempt session resumption.
  * connectInfo.cleanSession = false;
@@ -258,7 +268,8 @@ uint16_t MQTT_PubrelToResend( const MQTTContext_t * pMqttContext,
  *      if( sessionPresent )
  *      {
  *          // Loop while packet ID is nonzero.
- *          while( ( packetID = MQTT_PublishToResend( pContext, &cursor ) ) != 0 )
+ *          while( ( packetID = MQTT_PublishToResend( pContext, &cursor ) ) != 0
+ * )
  *          {
  *              // Assume this function will succeed.
  *              pResendPublish = getPublish( packetID );
@@ -303,7 +314,7 @@ const char * MQTT_State_strerror( MQTTPublishState_t state );
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
-    }
+}
 #endif
 /* *INDENT-ON* */
 

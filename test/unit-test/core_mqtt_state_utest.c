@@ -4,35 +4,36 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 /**
  * @file core_mqtt_state_utest.c
  * @brief Unit tests for functions in core_mqtt_state.h.
  */
-#include <string.h>
 #include "unity.h"
+#include <string.h>
 
 #include "core_mqtt_state.h"
 
-#define MQTT_PACKET_ID_INVALID         ( ( uint16_t ) 0U )
-#define  MQTT_STATE_ARRAY_MAX_COUNT    10
+#define MQTT_PACKET_ID_INVALID     ( ( uint16_t ) 0U )
+#define MQTT_STATE_ARRAY_MAX_COUNT 10
 
 /* ============================   UNITY FIXTURES ============================ */
 void setUp( void )
@@ -90,7 +91,8 @@ static uint32_t getTime( void )
  *
  * @param[in] pContext MQTT context pointer.
  * @param[in] pPacketInfo Packet Info pointer for the incoming packet.
- * @param[in] pDeserializedInfo Deserialized information from the incoming packet.
+ * @param[in] pDeserializedInfo Deserialized information from the incoming
+ * packet.
  */
 static void eventCallback( MQTTContext_t * pContext,
                            MQTTPacketInfo_t * pPacketInfo,
@@ -107,10 +109,12 @@ static void resetPublishRecords( MQTTContext_t * pMqttContext )
 
     for( ; i < MQTT_STATE_ARRAY_MAX_COUNT; i++ )
     {
-        pMqttContext->outgoingPublishRecords[ i ].packetId = MQTT_PACKET_ID_INVALID;
+        pMqttContext->outgoingPublishRecords[ i ]
+            .packetId = MQTT_PACKET_ID_INVALID;
         pMqttContext->outgoingPublishRecords[ i ].qos = MQTTQoS0;
         pMqttContext->outgoingPublishRecords[ i ].publishState = MQTTStateNull;
-        pMqttContext->incomingPublishRecords[ i ].packetId = MQTT_PACKET_ID_INVALID;
+        pMqttContext->incomingPublishRecords[ i ]
+            .packetId = MQTT_PACKET_ID_INVALID;
         pMqttContext->incomingPublishRecords[ i ].qos = MQTTQoS0;
         pMqttContext->incomingPublishRecords[ i ].publishState = MQTTStateNull;
     }
@@ -172,20 +176,30 @@ void test_MQTT_ReserveState( void )
     MQTTPubAckInfo_t incomingRecords[ MQTT_STATE_ARRAY_MAX_COUNT ] = { 0 };
     MQTTPubAckInfo_t outgoingRecords[ MQTT_STATE_ARRAY_MAX_COUNT ] = { 0 };
 
-    status = MQTT_Init( &mqttContext, &transport,
-                        getTime, eventCallback, &networkBuffer );
+    status = MQTT_Init( &mqttContext,
+                        &transport,
+                        getTime,
+                        eventCallback,
+                        &networkBuffer );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     status = MQTT_InitStatefulQoS( &mqttContext,
-                                   outgoingRecords, MQTT_STATE_ARRAY_MAX_COUNT,
-                                   incomingRecords, MQTT_STATE_ARRAY_MAX_COUNT );
+                                   outgoingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT,
+                                   incomingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     /* QoS 0 returns success. */
-    TEST_ASSERT_EQUAL( MQTTSuccess, MQTT_ReserveState( NULL, MQTT_PACKET_ID_INVALID, MQTTQoS0 ) );
+    TEST_ASSERT_EQUAL( MQTTSuccess,
+                       MQTT_ReserveState( NULL,
+                                          MQTT_PACKET_ID_INVALID,
+                                          MQTTQoS0 ) );
 
     /* Test for bad parameters */
-    status = MQTT_ReserveState( &mqttContext, MQTT_PACKET_ID_INVALID, MQTTQoS1 );
+    status = MQTT_ReserveState( &mqttContext,
+                                MQTT_PACKET_ID_INVALID,
+                                MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
     status = MQTT_ReserveState( NULL, PACKET_ID, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
@@ -198,9 +212,11 @@ void test_MQTT_ReserveState( void )
     status = MQTT_ReserveState( &mqttContext, PACKET_ID, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTStateCollision, status );
 
-
     /* Test for no memory. */
-    fillRecord( mqttContext.outgoingPublishRecords, 2, MQTTQoS1, MQTTPublishSend );
+    fillRecord( mqttContext.outgoingPublishRecords,
+                2,
+                MQTTQoS1,
+                MQTTPublishSend );
     status = MQTT_ReserveState( &mqttContext, PACKET_ID, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTNoMemory, status );
 
@@ -209,20 +225,31 @@ void test_MQTT_ReserveState( void )
     status = MQTT_ReserveState( &mqttContext, PACKET_ID, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     /* Reserve uses first available entry. */
-    TEST_ASSERT_EQUAL( PACKET_ID, mqttContext.outgoingPublishRecords[ 0 ].packetId );
+    TEST_ASSERT_EQUAL( PACKET_ID,
+                       mqttContext.outgoingPublishRecords[ 0 ].packetId );
     TEST_ASSERT_EQUAL( MQTTQoS1, mqttContext.outgoingPublishRecords[ 0 ].qos );
-    TEST_ASSERT_EQUAL( MQTTPublishSend, mqttContext.outgoingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPublishSend,
+                       mqttContext.outgoingPublishRecords[ 0 ].publishState );
 
     /* Success.
      * Add record after the highest non empty index.
      * Already an entry exists at index 0. Adding 1 more entry at index 5.
      * The new index used should be 6. */
-    addToRecord( mqttContext.outgoingPublishRecords, index, PACKET_ID2, MQTTQoS2, MQTTPubRelSend );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index,
+                 PACKET_ID2,
+                 MQTTQoS2,
+                 MQTTPubRelSend );
     status = MQTT_ReserveState( &mqttContext, PACKET_ID3, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
-    TEST_ASSERT_EQUAL( PACKET_ID3, mqttContext.outgoingPublishRecords[ index + 1 ].packetId );
-    TEST_ASSERT_EQUAL( MQTTQoS1, mqttContext.outgoingPublishRecords[ index + 1 ].qos );
-    TEST_ASSERT_EQUAL( MQTTPublishSend, mqttContext.outgoingPublishRecords[ index + 1 ].publishState );
+    TEST_ASSERT_EQUAL( PACKET_ID3,
+                       mqttContext.outgoingPublishRecords[ index + 1 ]
+                           .packetId );
+    TEST_ASSERT_EQUAL( MQTTQoS1,
+                       mqttContext.outgoingPublishRecords[ index + 1 ].qos );
+    TEST_ASSERT_EQUAL( MQTTPublishSend,
+                       mqttContext.outgoingPublishRecords[ index + 1 ]
+                           .publishState );
 }
 
 /* ========================================================================== */
@@ -325,8 +352,10 @@ void test_MQTT_RemoveStateRecord_RemoveQoS1Record( void )
     status = MQTT_RemoveStateRecord( &context, packetID );
 
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
-    TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].packetId, MQTT_PACKET_ID_INVALID );
-    TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].publishState, MQTTStateNull );
+    TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].packetId,
+                       MQTT_PACKET_ID_INVALID );
+    TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].publishState,
+                       MQTTStateNull );
     TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].qos, MQTTQoS0 );
 }
 
@@ -356,8 +385,10 @@ void test_MQTT_RemoveStateRecord_RemoveQoS2Record( void )
     status = MQTT_RemoveStateRecord( &context, packetID );
 
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
-    TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].packetId, MQTT_PACKET_ID_INVALID );
-    TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].publishState, MQTTStateNull );
+    TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].packetId,
+                       MQTT_PACKET_ID_INVALID );
+    TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].publishState,
+                       MQTTStateNull );
     TEST_ASSERT_EQUAL( context.outgoingPublishRecords[ 1 ].qos, MQTTQoS0 );
 }
 
@@ -379,13 +410,18 @@ void test_MQTT_ReserveState_compactRecords( void )
     MQTTPubAckInfo_t incomingRecords[ MQTT_STATE_ARRAY_MAX_COUNT ] = { 0 };
     MQTTPubAckInfo_t outgoingRecords[ MQTT_STATE_ARRAY_MAX_COUNT ] = { 0 };
 
-    status = MQTT_Init( &mqttContext, &transport,
-                        getTime, eventCallback, &networkBuffer );
+    status = MQTT_Init( &mqttContext,
+                        &transport,
+                        getTime,
+                        eventCallback,
+                        &networkBuffer );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     status = MQTT_InitStatefulQoS( &mqttContext,
-                                   outgoingRecords, MQTT_STATE_ARRAY_MAX_COUNT,
-                                   incomingRecords, MQTT_STATE_ARRAY_MAX_COUNT );
+                                   outgoingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT,
+                                   incomingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     /* Consider the state of the array with 2 states. 1 indicates a non empty
@@ -417,7 +453,10 @@ void test_MQTT_ReserveState_compactRecords( void )
      * Pre condition - 1 1 1 0 1 1 1 1 1 1.
      * Add an element will try to compact the array and the resulting state
      * should be - 1 1 1 1 1 1 1 1 1 1. */
-    fillRecord( mqttContext.outgoingPublishRecords, PACKET_ID2 + 1, MQTTQoS2, MQTTPubRelSend );
+    fillRecord( mqttContext.outgoingPublishRecords,
+                PACKET_ID2 + 1,
+                MQTTQoS2,
+                MQTTPubRelSend );
     /* Invalid record at index 3. */
     mqttContext.outgoingPublishRecords[ 3 ].packetId = MQTT_PACKET_ID_INVALID;
     status = MQTT_ReserveState( &mqttContext, PACKET_ID, MQTTQoS1 );
@@ -436,7 +475,10 @@ void test_MQTT_ReserveState_compactRecords( void )
      * Pre condition - 1 0 1 0 1 0 1 0 1 0.
      * Add an element will skip to compact the array and the resulting state
      * should be - 1 0 1 0 1 0 1 0 1 1. */
-    fillRecord( mqttContext.outgoingPublishRecords, PACKET_ID2 + 1, MQTTQoS2, MQTTPubRelSend );
+    fillRecord( mqttContext.outgoingPublishRecords,
+                PACKET_ID2 + 1,
+                MQTTQoS2,
+                MQTTPubRelSend );
     /* Invalidate record at alternate indexes starting from 1. */
     mqttContext.outgoingPublishRecords[ 1 ].packetId = MQTT_PACKET_ID_INVALID;
     mqttContext.outgoingPublishRecords[ 3 ].packetId = MQTT_PACKET_ID_INVALID;
@@ -457,36 +499,59 @@ void test_MQTT_ReserveState_compactRecords( void )
      * 1 1 1 1 1 1 1 0 0 0. */
     status = MQTT_ReserveState( &mqttContext, PACKET_ID2, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
-    validateRecordAt( mqttContext.outgoingPublishRecords, 6, PACKET_ID2, MQTTQoS1, MQTTPublishSend );
+    validateRecordAt( mqttContext.outgoingPublishRecords,
+                      6,
+                      PACKET_ID2,
+                      MQTTQoS1,
+                      MQTTPublishSend );
     /* Remaining records should be invalid. */
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 7 ].packetId );
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 8 ].packetId );
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 9 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 7 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 8 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 9 ].packetId );
 
     /* Free spots only in the beginning.
      * Pre condition - 0 0 0 0 0 1 1 1 1 1.
      * Add an element will compact the array and the resulting state
      * should be - 1 1 1 1 1 1 0 0 0 0. */
-    fillRecord( mqttContext.outgoingPublishRecords, PACKET_ID2 + 1, MQTTQoS2, MQTTPubRelSend );
+    fillRecord( mqttContext.outgoingPublishRecords,
+                PACKET_ID2 + 1,
+                MQTTQoS2,
+                MQTTPubRelSend );
     /* Clear record from 0 to 4. */
-    ( void ) memset( &mqttContext.outgoingPublishRecords[ 0 ], 0x00, 5 * sizeof( MQTTPubAckInfo_t ) );
+    ( void ) memset( &mqttContext.outgoingPublishRecords[ 0 ],
+                     0x00,
+                     5 * sizeof( MQTTPubAckInfo_t ) );
 
     /* Adding one element should result in array in state
      * 1 1 1 1 1 1 0 0 0 0. */
     status = MQTT_ReserveState( &mqttContext, PACKET_ID2, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
-    validateRecordAt( mqttContext.outgoingPublishRecords, 5, PACKET_ID2, MQTTQoS1, MQTTPublishSend );
+    validateRecordAt( mqttContext.outgoingPublishRecords,
+                      5,
+                      PACKET_ID2,
+                      MQTTQoS1,
+                      MQTTPublishSend );
     /* Remaining records should be cleared. */
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 6 ].packetId );
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 7 ].packetId );
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 8 ].packetId );
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 9 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 6 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 7 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 8 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 9 ].packetId );
 
     /* Fragmented array.
      * Pre condition - 1 0 0 1 1 1 1 0 0 1.
      * Add an element will compact the array and the resulting state
      * should be - 1 1 1 1 1 1 1 0 0 0. */
-    fillRecord( mqttContext.outgoingPublishRecords, PACKET_ID2 + 1, MQTTQoS2, MQTTPubRelSend );
+    fillRecord( mqttContext.outgoingPublishRecords,
+                PACKET_ID2 + 1,
+                MQTTQoS2,
+                MQTTPubRelSend );
     /* Clear record at index 1,2,7 and 8. */
     mqttContext.outgoingPublishRecords[ 1 ].packetId = MQTT_PACKET_ID_INVALID;
     mqttContext.outgoingPublishRecords[ 2 ].packetId = MQTT_PACKET_ID_INVALID;
@@ -494,25 +559,52 @@ void test_MQTT_ReserveState_compactRecords( void )
     mqttContext.outgoingPublishRecords[ 8 ].packetId = MQTT_PACKET_ID_INVALID;
     status = MQTT_ReserveState( &mqttContext, PACKET_ID2, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
-    validateRecordAt( mqttContext.outgoingPublishRecords, 6, PACKET_ID2, MQTTQoS1, MQTTPublishSend );
+    validateRecordAt( mqttContext.outgoingPublishRecords,
+                      6,
+                      PACKET_ID2,
+                      MQTTQoS1,
+                      MQTTPublishSend );
     /* Remaining records should be cleared. */
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 7 ].packetId );
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 8 ].packetId );
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 9 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 7 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 8 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 9 ].packetId );
 
     /* Fragmented array.
      * Pre condition - 1 0 0 0 0 0 0 0 0 1.
      * Add an element will compact the array and the resulting state
      * should be - 1 1 1 0 0 0 0 0 0 0. */
     resetPublishRecords( &mqttContext );
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRecPending );
-    addToRecord( mqttContext.outgoingPublishRecords, 9, PACKET_ID2 + 1, MQTTQoS2, MQTTPubCompPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRecPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 9,
+                 PACKET_ID2 + 1,
+                 MQTTQoS2,
+                 MQTTPubCompPending );
     status = MQTT_ReserveState( &mqttContext, PACKET_ID2, MQTTQoS1 );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
-    validateRecordAt( mqttContext.outgoingPublishRecords, 2, PACKET_ID2, MQTTQoS1, MQTTPublishSend );
+    validateRecordAt( mqttContext.outgoingPublishRecords,
+                      2,
+                      PACKET_ID2,
+                      MQTTQoS1,
+                      MQTTPublishSend );
     /* Validate existing records. */
-    validateRecordAt( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRecPending );
-    validateRecordAt( mqttContext.outgoingPublishRecords, 1, PACKET_ID2 + 1, MQTTQoS2, MQTTPubCompPending );
+    validateRecordAt( mqttContext.outgoingPublishRecords,
+                      0,
+                      PACKET_ID,
+                      MQTTQoS2,
+                      MQTTPubRecPending );
+    validateRecordAt( mqttContext.outgoingPublishRecords,
+                      1,
+                      PACKET_ID2 + 1,
+                      MQTTQoS2,
+                      MQTTPubCompPending );
 }
 
 /* ========================================================================== */
@@ -520,19 +612,26 @@ void test_MQTT_ReserveState_compactRecords( void )
 void test_MQTT_CalculateStatePublish( void )
 {
     /* QoS 0. */
-    TEST_ASSERT_EQUAL( MQTTPublishDone, MQTT_CalculateStatePublish( MQTT_SEND, MQTTQoS0 ) );
-    TEST_ASSERT_EQUAL( MQTTPublishDone, MQTT_CalculateStatePublish( MQTT_RECEIVE, MQTTQoS0 ) );
+    TEST_ASSERT_EQUAL( MQTTPublishDone,
+                       MQTT_CalculateStatePublish( MQTT_SEND, MQTTQoS0 ) );
+    TEST_ASSERT_EQUAL( MQTTPublishDone,
+                       MQTT_CalculateStatePublish( MQTT_RECEIVE, MQTTQoS0 ) );
 
     /* QoS 1. */
-    TEST_ASSERT_EQUAL( MQTTPubAckPending, MQTT_CalculateStatePublish( MQTT_SEND, MQTTQoS1 ) );
-    TEST_ASSERT_EQUAL( MQTTPubAckSend, MQTT_CalculateStatePublish( MQTT_RECEIVE, MQTTQoS1 ) );
+    TEST_ASSERT_EQUAL( MQTTPubAckPending,
+                       MQTT_CalculateStatePublish( MQTT_SEND, MQTTQoS1 ) );
+    TEST_ASSERT_EQUAL( MQTTPubAckSend,
+                       MQTT_CalculateStatePublish( MQTT_RECEIVE, MQTTQoS1 ) );
 
     /* QoS 2. */
-    TEST_ASSERT_EQUAL( MQTTPubRecPending, MQTT_CalculateStatePublish( MQTT_SEND, MQTTQoS2 ) );
-    TEST_ASSERT_EQUAL( MQTTPubRecSend, MQTT_CalculateStatePublish( MQTT_RECEIVE, MQTTQoS2 ) );
+    TEST_ASSERT_EQUAL( MQTTPubRecPending,
+                       MQTT_CalculateStatePublish( MQTT_SEND, MQTTQoS2 ) );
+    TEST_ASSERT_EQUAL( MQTTPubRecSend,
+                       MQTT_CalculateStatePublish( MQTT_RECEIVE, MQTTQoS2 ) );
 
     /* Invalid QoS. */
-    TEST_ASSERT_EQUAL( MQTTStateNull, MQTT_CalculateStatePublish( MQTT_SEND, 3 ) );
+    TEST_ASSERT_EQUAL( MQTTStateNull,
+                       MQTT_CalculateStatePublish( MQTT_SEND, 3 ) );
 }
 
 /* ========================================================================== */
@@ -555,13 +654,18 @@ void test_MQTT_UpdateStatePublish( void )
     MQTTPubAckInfo_t incomingRecords[ MQTT_STATE_ARRAY_MAX_COUNT ] = { 0 };
     MQTTPubAckInfo_t outgoingRecords[ MQTT_STATE_ARRAY_MAX_COUNT ] = { 0 };
 
-    status = MQTT_Init( &mqttContext, &transport,
-                        getTime, eventCallback, &networkBuffer );
+    status = MQTT_Init( &mqttContext,
+                        &transport,
+                        getTime,
+                        eventCallback,
+                        &networkBuffer );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     status = MQTT_InitStatefulQoS( &mqttContext,
-                                   outgoingRecords, MQTT_STATE_ARRAY_MAX_COUNT,
-                                   incomingRecords, MQTT_STATE_ARRAY_MAX_COUNT );
+                                   outgoingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT,
+                                   incomingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     /* QoS 0. */
@@ -578,46 +682,105 @@ void test_MQTT_UpdateStatePublish( void )
     status = MQTT_UpdateStatePublish( NULL, PACKET_ID, operation, qos, &state );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
     /* NULL new state. */
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, NULL );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      NULL );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
     /* No record found. */
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
     /* QoS mismatch. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPublishSend );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPublishSend );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
 
     /* Invalid state transition. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS1, MQTTPubRelPending );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS1,
+                 MQTTPubRelPending );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
 
     /* Invalid QoS. */
     operation = MQTT_SEND;
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, 3, MQTTPublishSend );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, 3, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 3,
+                 MQTTPublishSend );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      3,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
     operation = MQTT_RECEIVE;
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, 3, &state );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      3,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
 
     /* Invalid current state. */
     operation = MQTT_SEND;
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, qos, MQTTStateNull );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 qos,
+                 MQTTStateNull );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
 
     /* Collision. */
     operation = MQTT_RECEIVE;
-    addToRecord( mqttContext.incomingPublishRecords, 0, PACKET_ID, MQTTQoS1, MQTTPubAckSend );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    addToRecord( mqttContext.incomingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS1,
+                 MQTTPubAckSend );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTStateCollision, status );
 
     /* No memory. */
     operation = MQTT_RECEIVE;
-    fillRecord( mqttContext.incomingPublishRecords, 2, MQTTQoS1, MQTTPublishSend );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    fillRecord( mqttContext.incomingPublishRecords,
+                2,
+                MQTTQoS1,
+                MQTTPublishSend );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTNoMemory, status );
 
     resetPublishRecords( &mqttContext );
@@ -626,27 +789,51 @@ void test_MQTT_UpdateStatePublish( void )
     qos = MQTTQoS1;
     /* Send. */
     operation = MQTT_SEND;
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS1, MQTTPublishSend );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS1,
+                 MQTTPublishSend );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubAckPending, state );
-    TEST_ASSERT_EQUAL( MQTTPubAckPending, mqttContext.outgoingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubAckPending,
+                       mqttContext.outgoingPublishRecords[ 0 ].publishState );
     /* Resend when record already exists. */
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubAckPending, state );
-    TEST_ASSERT_EQUAL( MQTTPubAckPending, mqttContext.outgoingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubAckPending,
+                       mqttContext.outgoingPublishRecords[ 0 ].publishState );
     /* Receive. */
     operation = MQTT_RECEIVE;
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubAckSend, state );
-    TEST_ASSERT_EQUAL( MQTTPubAckSend, mqttContext.incomingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubAckSend,
+                       mqttContext.incomingPublishRecords[ 0 ].publishState );
     /* Receive duplicate incoming publish. */
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTStateCollision, status );
     TEST_ASSERT_EQUAL( MQTTPubAckSend, state );
-    TEST_ASSERT_EQUAL( MQTTPubAckSend, mqttContext.incomingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubAckSend,
+                       mqttContext.incomingPublishRecords[ 0 ].publishState );
 
     resetPublishRecords( &mqttContext );
 
@@ -654,34 +841,70 @@ void test_MQTT_UpdateStatePublish( void )
     qos = MQTTQoS2;
     /* Send. */
     operation = MQTT_SEND;
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPublishSend );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPublishSend );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubRecPending, state );
-    TEST_ASSERT_EQUAL( MQTTPubRecPending, mqttContext.outgoingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubRecPending,
+                       mqttContext.outgoingPublishRecords[ 0 ].publishState );
     /* Resend when record already exists. */
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubRecPending, state );
-    TEST_ASSERT_EQUAL( MQTTPubRecPending, mqttContext.outgoingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubRecPending,
+                       mqttContext.outgoingPublishRecords[ 0 ].publishState );
     /* Receive. */
     operation = MQTT_RECEIVE;
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubRecSend, state );
-    TEST_ASSERT_EQUAL( MQTTPubRecSend, mqttContext.incomingPublishRecords[ 0 ].publishState );
-    /* Receive incoming publish when the packet record is in state #MQTTPubRecSend. */
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    TEST_ASSERT_EQUAL( MQTTPubRecSend,
+                       mqttContext.incomingPublishRecords[ 0 ].publishState );
+    /* Receive incoming publish when the packet record is in state
+     * #MQTTPubRecSend. */
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTStateCollision, status );
     TEST_ASSERT_EQUAL( MQTTPubRecSend, state );
-    TEST_ASSERT_EQUAL( MQTTPubRecSend, mqttContext.incomingPublishRecords[ 0 ].publishState );
-    /* Receive incoming publish when the packet record is in state #MQTTPubRelPending. */
-    addToRecord( mqttContext.incomingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRelPending );
-    status = MQTT_UpdateStatePublish( &mqttContext, PACKET_ID, operation, qos, &state );
+    TEST_ASSERT_EQUAL( MQTTPubRecSend,
+                       mqttContext.incomingPublishRecords[ 0 ].publishState );
+    /* Receive incoming publish when the packet record is in state
+     * #MQTTPubRelPending. */
+    addToRecord( mqttContext.incomingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRelPending );
+    status = MQTT_UpdateStatePublish( &mqttContext,
+                                      PACKET_ID,
+                                      operation,
+                                      qos,
+                                      &state );
     TEST_ASSERT_EQUAL( MQTTStateCollision, status );
-    /* The returned state will always be #MQTTPubRecSend as a PUBREC need to be sent. */
+    /* The returned state will always be #MQTTPubRecSend as a PUBREC need to be
+     * sent. */
     TEST_ASSERT_EQUAL( MQTTPubRecSend, state );
-    TEST_ASSERT_EQUAL( MQTTPubRelPending, mqttContext.incomingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubRelPending,
+                       mqttContext.incomingPublishRecords[ 0 ].publishState );
 }
 
 /* ========================================================================== */
@@ -696,26 +919,33 @@ void test_MQTT_CalculateStateAck( void )
     qos = MQTTQoS0;
     ack = MQTTPuback;
     opType = MQTT_SEND;
-    TEST_ASSERT_EQUAL( MQTTStateNull, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTStateNull,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
     qos = MQTTQoS2;
-    TEST_ASSERT_EQUAL( MQTTStateNull, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTStateNull,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
     qos = MQTTQoS0;
     ack = MQTTPubrec;
-    TEST_ASSERT_EQUAL( MQTTStateNull, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTStateNull,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
     qos = MQTTQoS1;
-    TEST_ASSERT_EQUAL( MQTTStateNull, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTStateNull,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
 
     /* Invalid ack type. */
     ack = MQTTPubcomp + 1;
-    TEST_ASSERT_EQUAL( MQTTStateNull, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTStateNull,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
 
     /* PUBACK */
     ack = MQTTPuback;
     qos = MQTTQoS1;
     opType = MQTT_SEND;
-    TEST_ASSERT_EQUAL( MQTTPublishDone, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTPublishDone,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
     opType = MQTT_RECEIVE;
-    TEST_ASSERT_EQUAL( MQTTPublishDone, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTPublishDone,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
 
     /* QoS 2 tests. */
     qos = MQTTQoS2;
@@ -724,25 +954,31 @@ void test_MQTT_CalculateStateAck( void )
     ack = MQTTPubrec;
     /* Send */
     opType = MQTT_SEND;
-    TEST_ASSERT_EQUAL( MQTTPubRelPending, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTPubRelPending,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
     /* Receive */
     opType = MQTT_RECEIVE;
-    TEST_ASSERT_EQUAL( MQTTPubRelSend, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTPubRelSend,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
 
     /* PUBREL */
     ack = MQTTPubrel;
     /* Send */
     opType = MQTT_SEND;
-    TEST_ASSERT_EQUAL( MQTTPubCompPending, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTPubCompPending,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
     /* Receive */
     opType = MQTT_RECEIVE;
-    TEST_ASSERT_EQUAL( MQTTPubCompSend, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTPubCompSend,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
 
     /* PUBCOMP */
     ack = MQTTPubcomp;
-    TEST_ASSERT_EQUAL( MQTTPublishDone, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTPublishDone,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
     opType = MQTT_SEND;
-    TEST_ASSERT_EQUAL( MQTTPublishDone, MQTT_CalculateStateAck( ack, opType, qos ) );
+    TEST_ASSERT_EQUAL( MQTTPublishDone,
+                       MQTT_CalculateStateAck( ack, opType, qos ) );
 }
 
 /* ========================================================================== */
@@ -765,81 +1001,167 @@ void test_MQTT_UpdateStateAck( void )
     MQTTPubAckInfo_t incomingRecords[ MQTT_STATE_ARRAY_MAX_COUNT ] = { 0 };
     MQTTPubAckInfo_t outgoingRecords[ MQTT_STATE_ARRAY_MAX_COUNT ] = { 0 };
 
-    status = MQTT_Init( &mqttContext, &transport,
-                        getTime, eventCallback, &networkBuffer );
+    status = MQTT_Init( &mqttContext,
+                        &transport,
+                        getTime,
+                        eventCallback,
+                        &networkBuffer );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     status = MQTT_InitStatefulQoS( &mqttContext,
-                                   outgoingRecords, MQTT_STATE_ARRAY_MAX_COUNT,
-                                   incomingRecords, MQTT_STATE_ARRAY_MAX_COUNT );
+                                   outgoingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT,
+                                   incomingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     /* NULL parameters. */
     status = MQTT_UpdateStateAck( NULL, PACKET_ID, ack, operation, &state );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, NULL );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  NULL );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
     /* Invalid packet ID. */
     status = MQTT_UpdateStateAck( &mqttContext, 0, ack, operation, &state );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
     /* No matching record found. */
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTBadResponse, status );
 
     /* Invalid transitions. */
     /* Invalid transition from #MQTTPubRelPending. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRelPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRelPending );
     ack = MQTTPubrel;
     operation = MQTT_SEND;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
     /* Invalid transition from #MQTTPubCompSend. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubCompSend );
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubCompSend );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
     /* Invalid transition from #MQTTPubCompPending. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubCompPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubCompPending );
     ack = MQTTPubrec;
     operation = MQTT_RECEIVE;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
     /* Invalid transition from #MQTTPubRecPending. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRecPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRecPending );
     ack = MQTTPubcomp;
     status = MQTT_UpdateStateAck( &mqttContext, 1, ack, operation, &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
 
     /* Invalid ack type. */
-    status = MQTT_UpdateStateAck( &mqttContext, 1, MQTTPubcomp + 1, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  1,
+                                  MQTTPubcomp + 1,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTBadParameter, status );
 
     /* Invalid current state. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPublishDone );
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPublishDone );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPublishSend );
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPublishSend );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTStateNull );
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTStateNull );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTIllegalState, status );
 
     resetPublishRecords( &mqttContext );
 
     /* QoS 1, receive PUBACK for outgoing publish. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS1, MQTTPubAckPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS1,
+                 MQTTPubAckPending );
     operation = MQTT_RECEIVE;
     ack = MQTTPuback;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPublishDone, state );
 
     /* Test for deletion. */
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 0 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 0 ].packetId );
     /* Send PUBACK for incoming publish. */
     operation = MQTT_SEND;
-    addToRecord( mqttContext.incomingPublishRecords, 0, PACKET_ID, MQTTQoS1, MQTTPubAckSend );
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    addToRecord( mqttContext.incomingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS1,
+                 MQTTPubAckSend );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPublishDone, state );
 
@@ -847,88 +1169,172 @@ void test_MQTT_UpdateStateAck( void )
 
     /* QoS 2, PUBREL. */
     /* Outgoing. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRelSend );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRelSend );
     operation = MQTT_SEND;
     ack = MQTTPubrel;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubCompPending, state );
     /* Outgoing. Resend PUBREL when record in state #MQTTPubCompPending. */
     operation = MQTT_SEND;
     ack = MQTTPubrel;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubCompPending, state );
     /* Incoming. */
-    addToRecord( mqttContext.incomingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRelPending );
+    addToRecord( mqttContext.incomingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRelPending );
     operation = MQTT_RECEIVE;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubCompSend, state );
     /* Test for update. */
-    TEST_ASSERT_EQUAL( MQTTPubCompSend, mqttContext.incomingPublishRecords[ 0 ].publishState );
-    /* Incoming. Duplicate PUBREL is received when record is in state #MQTTPubRelPending. */
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    TEST_ASSERT_EQUAL( MQTTPubCompSend,
+                       mqttContext.incomingPublishRecords[ 0 ].publishState );
+    /* Incoming. Duplicate PUBREL is received when record is in state
+     * #MQTTPubRelPending. */
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubCompSend, state );
 
     /* QoS 2, PUBREC. */
     /* Outgoing. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRecPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRecPending );
     operation = MQTT_RECEIVE;
     ack = MQTTPubrec;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubRelSend, state );
 
     /* Receiving a PUBREC will move the record to the end.
      * In this case, only one record exists, no moving is required. */
-    TEST_ASSERT_EQUAL( PACKET_ID, mqttContext.outgoingPublishRecords[ 0 ].packetId );
+    TEST_ASSERT_EQUAL( PACKET_ID,
+                       mqttContext.outgoingPublishRecords[ 0 ].packetId );
     TEST_ASSERT_EQUAL( MQTTQoS2, mqttContext.outgoingPublishRecords[ 0 ].qos );
-    TEST_ASSERT_EQUAL( MQTTPubRelSend, mqttContext.outgoingPublishRecords[ 0 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubRelSend,
+                       mqttContext.outgoingPublishRecords[ 0 ].publishState );
 
     /* Outgoing.
      * Test if the record moves to the end of the records when PUBREC is
      * received. */
     resetPublishRecords( &mqttContext );
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRecPending );
-    addToRecord( mqttContext.outgoingPublishRecords, 1, PACKET_ID + 1, MQTTQoS2, MQTTPubRelSend );
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRecPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 1,
+                 PACKET_ID + 1,
+                 MQTTQoS2,
+                 MQTTPubRelSend );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubRelSend, state );
 
     /* Receiving a PUBREC will move the record to the end.
      * In this case, the record will be moved to index 2. */
-    TEST_ASSERT_EQUAL( PACKET_ID, mqttContext.outgoingPublishRecords[ 2 ].packetId );
+    TEST_ASSERT_EQUAL( PACKET_ID,
+                       mqttContext.outgoingPublishRecords[ 2 ].packetId );
     TEST_ASSERT_EQUAL( MQTTQoS2, mqttContext.outgoingPublishRecords[ 2 ].qos );
-    TEST_ASSERT_EQUAL( MQTTPubRelSend, mqttContext.outgoingPublishRecords[ 2 ].publishState );
+    TEST_ASSERT_EQUAL( MQTTPubRelSend,
+                       mqttContext.outgoingPublishRecords[ 2 ].publishState );
     /* Record at the current index will be marked as invalid. */
-    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, mqttContext.outgoingPublishRecords[ 0 ].packetId );
+    TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID,
+                       mqttContext.outgoingPublishRecords[ 0 ].packetId );
 
     /* Incoming. */
-    addToRecord( mqttContext.incomingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRecSend );
+    addToRecord( mqttContext.incomingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRecSend );
     operation = MQTT_SEND;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubRelPending, state );
-    /* Incoming. Duplicate publish received and record is in state #MQTTPubRelPending. */
-    addToRecord( mqttContext.incomingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubRelPending );
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    /* Incoming. Duplicate publish received and record is in state
+     * #MQTTPubRelPending. */
+    addToRecord( mqttContext.incomingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRelPending );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPubRelPending, state );
 
     /* QoS 2, PUBCOMP. */
     /* Outgoing. */
-    addToRecord( mqttContext.outgoingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubCompPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubCompPending );
     operation = MQTT_RECEIVE;
     ack = MQTTPubcomp;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPublishDone, state );
     /* Incoming. */
-    addToRecord( mqttContext.incomingPublishRecords, 0, PACKET_ID, MQTTQoS2, MQTTPubCompSend );
+    addToRecord( mqttContext.incomingPublishRecords,
+                 0,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubCompSend );
     operation = MQTT_SEND;
-    status = MQTT_UpdateStateAck( &mqttContext, PACKET_ID, ack, operation, &state );
+    status = MQTT_UpdateStateAck( &mqttContext,
+                                  PACKET_ID,
+                                  ack,
+                                  operation,
+                                  &state );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
     TEST_ASSERT_EQUAL( MQTTPublishDone, state );
 }
@@ -959,13 +1365,18 @@ void test_MQTT_AckToResend( void )
     transport.recv = transportRecvSuccess;
     transport.send = transportSendSuccess;
 
-    status = MQTT_Init( &mqttContext, &transport,
-                        getTime, eventCallback, &networkBuffer );
+    status = MQTT_Init( &mqttContext,
+                        &transport,
+                        getTime,
+                        eventCallback,
+                        &networkBuffer );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     status = MQTT_InitStatefulQoS( &mqttContext,
-                                   outgoingRecords, MQTT_STATE_ARRAY_MAX_COUNT,
-                                   incomingRecords, MQTT_STATE_ARRAY_MAX_COUNT );
+                                   outgoingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT,
+                                   incomingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     /* Invalid parameters. */
@@ -983,10 +1394,19 @@ void test_MQTT_AckToResend( void )
     TEST_ASSERT_EQUAL( MQTTStateNull, state );
     TEST_ASSERT_EQUAL( MQTT_STATE_ARRAY_MAX_COUNT, cursor );
 
-    /* No packet exists in state #MQTTPubCompPending or #MQTTPubCompPending states. */
+    /* No packet exists in state #MQTTPubCompPending or #MQTTPubCompPending
+     * states. */
     cursor = MQTT_STATE_CURSOR_INITIALIZER;
-    addToRecord( mqttContext.outgoingPublishRecords, index, PACKET_ID3, MQTTQoS2, MQTTPubRelPending );
-    addToRecord( mqttContext.outgoingPublishRecords, index2, PACKET_ID4, MQTTQoS2, MQTTPubCompSend );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index,
+                 PACKET_ID3,
+                 MQTTQoS2,
+                 MQTTPubRelPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index2,
+                 PACKET_ID4,
+                 MQTTQoS2,
+                 MQTTPubCompSend );
     packetId = MQTT_PubrelToResend( &mqttContext, &cursor, &state );
     TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, packetId );
     TEST_ASSERT_EQUAL( MQTTStateNull, state );
@@ -994,21 +1414,33 @@ void test_MQTT_AckToResend( void )
 
     /* Add a record in #MQTTPubCompPending state. */
     cursor = MQTT_STATE_CURSOR_INITIALIZER;
-    addToRecord( mqttContext.outgoingPublishRecords, index3, PACKET_ID, MQTTQoS2, MQTTPubCompPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index3,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubCompPending );
     packetId = MQTT_PubrelToResend( &mqttContext, &cursor, &state );
     TEST_ASSERT_EQUAL( PACKET_ID, packetId );
     TEST_ASSERT_EQUAL( index3 + 1, cursor );
     TEST_ASSERT_EQUAL( MQTTPubRelSend, state );
 
     /* Add another record in #MQTTPubCompPending state. */
-    addToRecord( mqttContext.outgoingPublishRecords, index4, PACKET_ID2, MQTTQoS2, MQTTPubCompPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index4,
+                 PACKET_ID2,
+                 MQTTQoS2,
+                 MQTTPubCompPending );
     packetId = MQTT_PubrelToResend( &mqttContext, &cursor, &state );
     TEST_ASSERT_EQUAL( PACKET_ID2, packetId );
     TEST_ASSERT_EQUAL( index4 + 1, cursor );
     TEST_ASSERT_EQUAL( MQTTPubRelSend, state );
 
     /* Add another record in #MQTTPubRelSend state. */
-    addToRecord( mqttContext.outgoingPublishRecords, index4 + 1, PACKET_ID2 + 1, MQTTQoS2, MQTTPubRelSend );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index4 + 1,
+                 PACKET_ID2 + 1,
+                 MQTTQoS2,
+                 MQTTPubRelSend );
     packetId = MQTT_PubrelToResend( &mqttContext, &cursor, &state );
     TEST_ASSERT_EQUAL( PACKET_ID2 + 1, packetId );
     TEST_ASSERT_EQUAL( index4 + 2, cursor );
@@ -1017,7 +1449,11 @@ void test_MQTT_AckToResend( void )
     /* Only one record in #MQTTPubRelSend state. */
     resetPublishRecords( &mqttContext );
     cursor = MQTT_STATE_CURSOR_INITIALIZER;
-    addToRecord( mqttContext.outgoingPublishRecords, index3, PACKET_ID, MQTTQoS2, MQTTPubRelSend );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index3,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPubRelSend );
     packetId = MQTT_PubrelToResend( &mqttContext, &cursor, &state );
     TEST_ASSERT_EQUAL( PACKET_ID, packetId );
     TEST_ASSERT_EQUAL( index3 + 1, cursor );
@@ -1055,15 +1491,19 @@ void test_MQTT_PublishToResend( void )
 
     MQTTFixedBuffer_t networkBuffer = { 0 };
 
-    status = MQTT_Init( &mqttContext, &transport,
-                        getTime, eventCallback, &networkBuffer );
+    status = MQTT_Init( &mqttContext,
+                        &transport,
+                        getTime,
+                        eventCallback,
+                        &networkBuffer );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
 
     status = MQTT_InitStatefulQoS( &mqttContext,
-                                   outgoingRecords, MQTT_STATE_ARRAY_MAX_COUNT,
-                                   incomingRecords, MQTT_STATE_ARRAY_MAX_COUNT );
+                                   outgoingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT,
+                                   incomingRecords,
+                                   MQTT_STATE_ARRAY_MAX_COUNT );
     TEST_ASSERT_EQUAL( MQTTSuccess, status );
-
 
     /* Invalid parameters. */
     packetId = MQTT_PublishToResend( NULL, &cursor );
@@ -1080,27 +1520,47 @@ void test_MQTT_PublishToResend( void )
     /* No packet exists in state #MQTTPublishSend, #MQTTPubAckPending and
      * #MQTTPubRecPending states. */
     cursor = MQTT_STATE_CURSOR_INITIALIZER;
-    addToRecord( mqttContext.outgoingPublishRecords, index, PACKET_ID3, MQTTQoS2, MQTTPubCompPending );
-    addToRecord( mqttContext.outgoingPublishRecords, index2, PACKET_ID4, MQTTQoS2, MQTTPubRelSend );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index,
+                 PACKET_ID3,
+                 MQTTQoS2,
+                 MQTTPubCompPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index2,
+                 PACKET_ID4,
+                 MQTTQoS2,
+                 MQTTPubRelSend );
     packetId = MQTT_PublishToResend( &mqttContext, &cursor );
     TEST_ASSERT_EQUAL( MQTT_PACKET_ID_INVALID, packetId );
     TEST_ASSERT_EQUAL( MQTT_STATE_ARRAY_MAX_COUNT, cursor );
 
     /* Add a record in #MQTTPublishSend state. */
     cursor = MQTT_STATE_CURSOR_INITIALIZER;
-    addToRecord( mqttContext.outgoingPublishRecords, index3, PACKET_ID, MQTTQoS2, MQTTPublishSend );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index3,
+                 PACKET_ID,
+                 MQTTQoS2,
+                 MQTTPublishSend );
     packetId = MQTT_PublishToResend( &mqttContext, &cursor );
     TEST_ASSERT_EQUAL( PACKET_ID, packetId );
     TEST_ASSERT_EQUAL( index3 + 1, cursor );
 
     /* Add another record in #MQTTPubAckPending state. */
-    addToRecord( mqttContext.outgoingPublishRecords, index4, PACKET_ID2, MQTTQoS1, MQTTPubAckPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index4,
+                 PACKET_ID2,
+                 MQTTQoS1,
+                 MQTTPubAckPending );
     packetId = MQTT_PublishToResend( &mqttContext, &cursor );
     TEST_ASSERT_EQUAL( PACKET_ID2, packetId );
     TEST_ASSERT_EQUAL( index4 + 1, cursor );
 
     /* Add another record in #MQTTPubRecPending state. */
-    addToRecord( mqttContext.outgoingPublishRecords, index4 + 1, PACKET_ID2 + 1, MQTTQoS2, MQTTPubRecPending );
+    addToRecord( mqttContext.outgoingPublishRecords,
+                 index4 + 1,
+                 PACKET_ID2 + 1,
+                 MQTTQoS2,
+                 MQTTPubRecPending );
     packetId = MQTT_PublishToResend( &mqttContext, &cursor );
     TEST_ASSERT_EQUAL( PACKET_ID2 + 1, packetId );
     TEST_ASSERT_EQUAL( index4 + 2, cursor );
