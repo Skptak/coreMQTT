@@ -1,7 +1,5 @@
-{ "expected-missing-functions":
-  [
-
-  ],
+{
+  "expected-missing-functions": [],
   "proof-name": "MQTT_GetIncomingPacketTypeAndLength",
   "proof-root": "test/cbmc/proofs"
 }
