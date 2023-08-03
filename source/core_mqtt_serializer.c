@@ -40,32 +40,34 @@
 /**
  * @brief MQTT protocol version 3.1.1.
  */
-#define MQTT_VERSION_3_1_1               ( ( uint8_t ) 4U )
+#define MQTT_VERSION_3_1_1              ( ( uint8_t ) 4U )
 
 /**
  * @brief Size of the fixed and variable header of a CONNECT packet.
  */
-#define MQTT_PACKET_CONNECT_HEADER_SIZE  ( 10UL )
+#define MQTT_PACKET_CONNECT_HEADER_SIZE ( 10UL )
 
 /* MQTT CONNECT flags. */
-#define MQTT_CONNECT_FLAG_CLEAN          ( 1 ) /**< @brief Clean session. */
-#define MQTT_CONNECT_FLAG_WILL           ( 2 ) /**< @brief Will present. */
-#define MQTT_CONNECT_FLAG_WILL_QOS1      ( 3 ) /**< @brief Will QoS 1. */
-#define MQTT_CONNECT_FLAG_WILL_QOS2      ( 4 ) /**< @brief Will QoS 2. */
-#define MQTT_CONNECT_FLAG_WILL_RETAIN    ( 5 ) /**< @brief Will retain. */
-#define MQTT_CONNECT_FLAG_PASSWORD       ( 6 ) /**< @brief Password present. */
-#define MQTT_CONNECT_FLAG_USERNAME       ( 7 ) /**< @brief User name present. */
+#define MQTT_CONNECT_FLAG_CLEAN         ( 1 ) /**< @brief Clean session. */
+#define MQTT_CONNECT_FLAG_WILL          ( 2 ) /**< @brief Will present. */
+#define MQTT_CONNECT_FLAG_WILL_QOS1     ( 3 ) /**< @brief Will QoS 1. */
+#define MQTT_CONNECT_FLAG_WILL_QOS2     ( 4 ) /**< @brief Will QoS 2. */
+#define MQTT_CONNECT_FLAG_WILL_RETAIN   ( 5 ) /**< @brief Will retain. */
+#define MQTT_CONNECT_FLAG_PASSWORD      ( 6 ) /**< @brief Password present. */
+#define MQTT_CONNECT_FLAG_USERNAME      ( 7 ) /**< @brief User name present. */
 
 /*
  * Positions of each flag in the first byte of an MQTT PUBLISH packet's
  * fixed header.
  */
-#define MQTT_PUBLISH_FLAG_RETAIN         ( 0 ) /**< @brief MQTT PUBLISH retain flag. \
-                                                */
-#define MQTT_PUBLISH_FLAG_QOS1           ( 1 ) /**< @brief MQTT PUBLISH QoS1 flag. */
-#define MQTT_PUBLISH_FLAG_QOS2           ( 2 ) /**< @brief MQTT PUBLISH QoS2 flag. */
-#define MQTT_PUBLISH_FLAG_DUP            ( 3 ) /**< @brief MQTT PUBLISH duplicate flag. \
-                                                */
+#define MQTT_PUBLISH_FLAG_RETAIN                                           \
+    ( 0 )                            /**< @brief MQTT PUBLISH retain flag. \
+                                      */
+#define MQTT_PUBLISH_FLAG_QOS1 ( 1 ) /**< @brief MQTT PUBLISH QoS1 flag. */
+#define MQTT_PUBLISH_FLAG_QOS2 ( 2 ) /**< @brief MQTT PUBLISH QoS2 flag. */
+#define MQTT_PUBLISH_FLAG_DUP                      \
+    ( 3 ) /**< @brief MQTT PUBLISH duplicate flag. \
+           */
 
 /**
  * @brief The size of MQTT DISCONNECT packets, per MQTT spec.
