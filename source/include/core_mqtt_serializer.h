@@ -1284,9 +1284,10 @@ MQTTStatus_t MQTT_ProcessIncomingPacketTypeAndLength(
 /* @[declare_mqtt_processincomingpackettypeandlength] */
 
 /**
- * @fn uint8_t * MQTT_SerializeConnectFixedHeader( uint8_t * pIndex, const
- * MQTTConnectInfo_t * pConnectInfo, const MQTTPublishInfo_t * pWillInfo, size_t
- * remainingLength );
+ * @fn uint8_t * MQTT_SerializeConnectFixedHeader( uint8_t * pIndex,
+ * const MQTTConnectInfo_t * pConnectInfo,
+ * const MQTTPublishInfo_t * pWillInfo,
+ * size_t remainingLength );
  * @brief Serialize the fixed part of the connect packet header.
  *
  * @param[out] pIndex Pointer to the buffer where the header is to

@@ -86,9 +86,10 @@ MQTTStatus_t MQTT_ReserveState( const MQTTContext_t * pMqttContext,
 /** @endcond */
 
 /**
- * @fn MQTTPublishState_t MQTT_CalculateStatePublish( MQTTStateOperation_t
- * opType, MQTTQoS_t qos )
- * @brief Calculate the new state for a publish from its qos and operation type.
+ * @fn MQTTPublishState_t MQTT_CalculateStatePublish(
+ * MQTTStateOperation_t opType, MQTTQoS_t qos )
+ * @brief Calculate the new state for a publish from its
+ * qos and operation type.
  *
  * @param[in] opType Send or Receive.
  * @param[in] qos 0, 1, or 2.
