@@ -107,9 +107,9 @@ $(document).ready(function(){initNavTree('core__mqtt__state_8c.html',''); initRe
 
 <p>Implements the functions in <a class="el" href="core__mqtt__state_8h.html" title="Function to keep state of MQTT PUBLISH packet deliveries.">core_mqtt_state.h</a>.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;assert.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="core__mqtt__state_8h_source.html">core_mqtt_state.h</a>&quot;</code><br />
+<code>#include &lt;assert.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="core__mqtt__state_8h_source.html">core_mqtt_state.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="core__mqtt__config__defaults_8h_source.html">core_mqtt_config_defaults.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="core__mqtt__default__logging_8h_source.html">core_mqtt_default_logging.h</a>&quot;</code><br />
 </div><table class="memberdecls">
@@ -119,13 +119,13 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MQTT_INVALID_STATE_COUNT</b>&#160;&#160;&#160;( ~<a class="el" href="core__mqtt__state_8c.html#ab93bbb754488b23d5ac75abcd385e086">ZERO_SIZE_T</a> )</td></tr>
 <tr class="memdesc:a49d2236ebe2b3d27e82e54a7b9e74984"><td class="mdescLeft">&#160;</td><td class="mdescRight">This macro depicts the invalid value for the state publishes. <br /></td></tr>
 <tr class="separator:a49d2236ebe2b3d27e82e54a7b9e74984"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50892214c51968df798f584272f16a17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>(position)&#160;&#160;&#160;( ( uint16_t ) 0x01U &lt;&lt; ( ( uint16_t ) position ) )</td></tr>
+<tr class="memitem:a50892214c51968df798f584272f16a17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>(position)&#160;&#160;&#160;    ( ( uint16_t ) 0x01U &lt;&lt; ( ( uint16_t ) position ) )</td></tr>
 <tr class="memdesc:a50892214c51968df798f584272f16a17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a 16-bit bitmap with bit set at specified position.  <br /></td></tr>
 <tr class="separator:a50892214c51968df798f584272f16a17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd96521b31682b7d93de544704fd9594"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core__mqtt__state_8c.html#acd96521b31682b7d93de544704fd9594">UINT16_SET_BIT</a>(x,  position)&#160;&#160;&#160;( ( x ) = ( uint16_t ) ( ( x ) | ( <a class="el" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) ) )</td></tr>
+<tr class="memitem:acd96521b31682b7d93de544704fd9594"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core__mqtt__state_8c.html#acd96521b31682b7d93de544704fd9594">UINT16_SET_BIT</a>(x,  position)</td></tr>
 <tr class="memdesc:acd96521b31682b7d93de544704fd9594"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a bit in an 16-bit unsigned integer.  <br /></td></tr>
 <tr class="separator:acd96521b31682b7d93de544704fd9594"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a085ab1307745f304ce2e6d24bdc3f6a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core__mqtt__state_8c.html#a085ab1307745f304ce2e6d24bdc3f6a7">UINT16_CHECK_BIT</a>(x,  position)&#160;&#160;&#160;( ( ( x ) &amp; ( <a class="el" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) ) == ( <a class="el" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) )</td></tr>
+<tr class="memitem:a085ab1307745f304ce2e6d24bdc3f6a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core__mqtt__state_8c.html#a085ab1307745f304ce2e6d24bdc3f6a7">UINT16_CHECK_BIT</a>(x,  position)</td></tr>
 <tr class="memdesc:a085ab1307745f304ce2e6d24bdc3f6a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro for checking if a bit is set in a 16-bit unsigned integer.  <br /></td></tr>
 <tr class="separator:a085ab1307745f304ce2e6d24bdc3f6a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -210,7 +210,7 @@ static const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZERO_S
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">position</td><td>)</td>
-          <td>&#160;&#160;&#160;( ( uint16_t ) 0x01U &lt;&lt; ( ( uint16_t ) position ) )</td>
+          <td>&#160;&#160;&#160;    ( ( uint16_t ) 0x01U &lt;&lt; ( ( uint16_t ) position ) )</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -246,11 +246,14 @@ static const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZERO_S
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;( ( x ) = ( uint16_t ) ( ( x ) | ( <a class="el" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) ) )</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    ( ( x ) = ( uint16_t ) ( ( x ) |  \</div>
+<div class="line">                             ( <a class="code hl_define" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) ) )</div>
+<div class="ttc" id="acore__mqtt__state_8c_html_a50892214c51968df798f584272f16a17"><div class="ttname"><a href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a></div><div class="ttdeci">#define UINT16_BITMAP_BIT_SET_AT(position)</div><div class="ttdoc">Create a 16-bit bitmap with bit set at specified position.</div><div class="ttdef"><b>Definition:</b> core_mqtt_state.c:57</div></div>
+</div><!-- fragment -->
 <p>Set a bit in an 16-bit unsigned integer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -283,11 +286,13 @@ static const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZERO_S
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;( ( ( x ) &amp; ( <a class="el" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) ) == ( <a class="el" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) )</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    ( ( ( x ) &amp; ( <a class="code hl_define" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) ) == \</div>
+<div class="line">      ( <a class="code hl_define" href="core__mqtt__state_8c.html#a50892214c51968df798f584272f16a17">UINT16_BITMAP_BIT_SET_AT</a>( position ) ) )</div>
+</div><!-- fragment -->
 <p>Macro for checking if a bit is set in a 16-bit unsigned integer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1276,8 +1281,8 @@ static const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZERO_S
 <div class="line"><a class="code hl_struct" href="struct_m_q_t_t_publish_info__t.html">MQTTPublishInfo_t</a> * pResendPublish = NULL;</div>
 <div class="line"><a class="code hl_struct" href="struct_m_q_t_t_connect_info__t.html">MQTTConnectInfo_t</a> connectInfo = { 0 };</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// This is assumed to have been initialized before the call to MQTT_Connect().</span></div>
-<div class="line"><a class="code hl_struct" href="struct_m_q_t_t_context__t.html">MQTTContext_t</a> * pContext;</div>
+<div class="line"><span class="comment">// This is assumed to have been initialized before the call to</span></div>
+<div class="line"><a class="code hl_function" href="core__mqtt_8h.html#aed1e4dc123a8ba79ac569cb17c69bfa0">MQTT_Connect</a>(). <a class="code hl_struct" href="struct_m_q_t_t_context__t.html">MQTTContext_t</a> * pContext;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Set clean session to false to attempt session resumption.</span></div>
 <div class="line">connectInfo.<a class="code hl_variable" href="struct_m_q_t_t_connect_info__t.html#a606e7765c4f2215fb2bf630f6eb9ff6b">cleanSession</a> = <span class="keyword">false</span>;</div>
@@ -1294,7 +1299,8 @@ static const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZERO_S
 <div class="line">     <span class="keywordflow">if</span>( sessionPresent )</div>
 <div class="line">     {</div>
 <div class="line">         <span class="comment">// Loop while packet ID is nonzero.</span></div>
-<div class="line">         <span class="keywordflow">while</span>( ( packetID = <a class="code hl_function" href="core__mqtt__state_8h.html#a44b3cf50dc477a9f97413a9238a961f6">MQTT_PublishToResend</a>( pContext, &amp;cursor ) ) != 0 )</div>
+<div class="line">         <span class="keywordflow">while</span>( ( packetID = <a class="code hl_function" href="core__mqtt__state_8h.html#a44b3cf50dc477a9f97413a9238a961f6">MQTT_PublishToResend</a>( pContext, &amp;cursor ) ) != 0</div>
+<div class="line">)</div>
 <div class="line">         {</div>
 <div class="line">             <span class="comment">// Assume this function will succeed.</span></div>
 <div class="line">             pResendPublish = getPublish( packetID );</div>
@@ -1314,21 +1320,21 @@ static const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZERO_S
 <div class="line">         <span class="comment">// list of outgoing publishes.</span></div>
 <div class="line">     }</div>
 <div class="line">}</div>
-<div class="ttc" id="acore__mqtt_8h_html_a1d8217e9d30fb2aed002060a8c97c63e"><div class="ttname"><a href="core__mqtt_8h.html#a1d8217e9d30fb2aed002060a8c97c63e">MQTT_Publish</a></div><div class="ttdeci">MQTTStatus_t MQTT_Publish(MQTTContext_t *pContext, const MQTTPublishInfo_t *pPublishInfo, uint16_t packetId)</div><div class="ttdoc">Publishes a message to the given topic name.</div><div class="ttdef"><b>Definition:</b> core_mqtt.c:2802</div></div>
-<div class="ttc" id="acore__mqtt_8h_html_aed1e4dc123a8ba79ac569cb17c69bfa0"><div class="ttname"><a href="core__mqtt_8h.html#aed1e4dc123a8ba79ac569cb17c69bfa0">MQTT_Connect</a></div><div class="ttdeci">MQTTStatus_t MQTT_Connect(MQTTContext_t *pContext, const MQTTConnectInfo_t *pConnectInfo, const MQTTPublishInfo_t *pWillInfo, uint32_t timeoutMs, bool *pSessionPresent)</div><div class="ttdoc">Establish an MQTT session.</div><div class="ttdef"><b>Definition:</b> core_mqtt.c:2676</div></div>
-<div class="ttc" id="acore__mqtt__state_8h_html_a44b3cf50dc477a9f97413a9238a961f6"><div class="ttname"><a href="core__mqtt__state_8h.html#a44b3cf50dc477a9f97413a9238a961f6">MQTT_PublishToResend</a></div><div class="ttdeci">uint16_t MQTT_PublishToResend(const MQTTContext_t *pMqttContext, MQTTStateCursor_t *pCursor)</div><div class="ttdoc">Get the packet ID of next pending publish to be resent.</div><div class="ttdef"><b>Definition:</b> core_mqtt_state.c:1125</div></div>
-<div class="ttc" id="agroup__mqtt__basic__types_html_ga2ca7d486d83fe555953a8c7876ee0d6e"><div class="ttname"><a href="group__mqtt__basic__types.html#ga2ca7d486d83fe555953a8c7876ee0d6e">MQTTStateCursor_t</a></div><div class="ttdeci">size_t MQTTStateCursor_t</div><div class="ttdoc">Cursor for iterating through state records.</div><div class="ttdef"><b>Definition:</b> core_mqtt_state.h:51</div></div>
-<div class="ttc" id="agroup__mqtt__constants_html_ga666ad78e7eaaffa51f5cab96201a9476"><div class="ttname"><a href="group__mqtt__constants.html#ga666ad78e7eaaffa51f5cab96201a9476">MQTT_STATE_CURSOR_INITIALIZER</a></div><div class="ttdeci">#define MQTT_STATE_CURSOR_INITIALIZER</div><div class="ttdoc">Initializer value for an MQTTStateCursor_t, indicating a search should start at the beginning of a st...</div><div class="ttdef"><b>Definition:</b> core_mqtt_state.h:45</div></div>
-<div class="ttc" id="agroup__mqtt__enum__types_html_gaba7ec045874a1c3432f99173367f735c"><div class="ttname"><a href="group__mqtt__enum__types.html#gaba7ec045874a1c3432f99173367f735c">MQTTStatus_t</a></div><div class="ttdeci">MQTTStatus_t</div><div class="ttdoc">Return codes from MQTT functions.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:99</div></div>
-<div class="ttc" id="agroup__mqtt__enum__types_html_ggaba7ec045874a1c3432f99173367f735ca484e062cb4f3fccc1858dd25cfeee056"><div class="ttname"><a href="group__mqtt__enum__types.html#ggaba7ec045874a1c3432f99173367f735ca484e062cb4f3fccc1858dd25cfeee056">MQTTSuccess</a></div><div class="ttdeci">@ MQTTSuccess</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:100</div></div>
-<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html">MQTTConnectInfo_t</a></div><div class="ttdoc">MQTT CONNECT packet parameters.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:145</div></div>
-<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html_a010f8f6993cbf8899648d5c515ff7884"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html#a010f8f6993cbf8899648d5c515ff7884">MQTTConnectInfo_t::pClientIdentifier</a></div><div class="ttdeci">const char * pClientIdentifier</div><div class="ttdoc">MQTT client identifier. Must be unique per client.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:159</div></div>
-<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html_a606e7765c4f2215fb2bf630f6eb9ff6b"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html#a606e7765c4f2215fb2bf630f6eb9ff6b">MQTTConnectInfo_t::cleanSession</a></div><div class="ttdeci">bool cleanSession</div><div class="ttdoc">Whether to establish a new, clean session or resume a previous session.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:149</div></div>
-<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html_a7d05d53261732ebdfbb9ee665a347591"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html#a7d05d53261732ebdfbb9ee665a347591">MQTTConnectInfo_t::keepAliveSeconds</a></div><div class="ttdeci">uint16_t keepAliveSeconds</div><div class="ttdoc">MQTT keep alive period.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:154</div></div>
-<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html_a8077ef36ab318f3d35bee6f098fa54d4"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html#a8077ef36ab318f3d35bee6f098fa54d4">MQTTConnectInfo_t::clientIdentifierLength</a></div><div class="ttdeci">uint16_t clientIdentifierLength</div><div class="ttdoc">Length of the client identifier.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:164</div></div>
-<div class="ttc" id="astruct_m_q_t_t_context__t_html"><div class="ttname"><a href="struct_m_q_t_t_context__t.html">MQTTContext_t</a></div><div class="ttdoc">A struct representing an MQTT connection.</div><div class="ttdef"><b>Definition:</b> core_mqtt.h:162</div></div>
-<div class="ttc" id="astruct_m_q_t_t_publish_info__t_html"><div class="ttname"><a href="struct_m_q_t_t_publish_info__t.html">MQTTPublishInfo_t</a></div><div class="ttdoc">MQTT PUBLISH packet parameters.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:214</div></div>
-<div class="ttc" id="astruct_m_q_t_t_publish_info__t_html_aa1c8954e83bfa678d1ff5429679d4e89"><div class="ttname"><a href="struct_m_q_t_t_publish_info__t.html#aa1c8954e83bfa678d1ff5429679d4e89">MQTTPublishInfo_t::dup</a></div><div class="ttdeci">bool dup</div><div class="ttdoc">Whether this is a duplicate publish message.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:228</div></div>
+<div class="ttc" id="acore__mqtt_8h_html_a1d8217e9d30fb2aed002060a8c97c63e"><div class="ttname"><a href="core__mqtt_8h.html#a1d8217e9d30fb2aed002060a8c97c63e">MQTT_Publish</a></div><div class="ttdeci">MQTTStatus_t MQTT_Publish(MQTTContext_t *pContext, const MQTTPublishInfo_t *pPublishInfo, uint16_t packetId)</div><div class="ttdoc">Publishes a message to the given topic name.</div><div class="ttdef"><b>Definition:</b> core_mqtt.c:2915</div></div>
+<div class="ttc" id="acore__mqtt_8h_html_aed1e4dc123a8ba79ac569cb17c69bfa0"><div class="ttname"><a href="core__mqtt_8h.html#aed1e4dc123a8ba79ac569cb17c69bfa0">MQTT_Connect</a></div><div class="ttdeci">MQTTStatus_t MQTT_Connect(MQTTContext_t *pContext, const MQTTConnectInfo_t *pConnectInfo, const MQTTPublishInfo_t *pWillInfo, uint32_t timeoutMs, bool *pSessionPresent)</div><div class="ttdoc">Establish an MQTT session.</div><div class="ttdef"><b>Definition:</b> core_mqtt.c:2787</div></div>
+<div class="ttc" id="acore__mqtt__state_8h_html_a44b3cf50dc477a9f97413a9238a961f6"><div class="ttname"><a href="core__mqtt__state_8h.html#a44b3cf50dc477a9f97413a9238a961f6">MQTT_PublishToResend</a></div><div class="ttdeci">uint16_t MQTT_PublishToResend(const MQTTContext_t *pMqttContext, MQTTStateCursor_t *pCursor)</div><div class="ttdoc">Get the packet ID of next pending publish to be resent.</div><div class="ttdef"><b>Definition:</b> core_mqtt_state.c:1143</div></div>
+<div class="ttc" id="agroup__mqtt__basic__types_html_ga2ca7d486d83fe555953a8c7876ee0d6e"><div class="ttname"><a href="group__mqtt__basic__types.html#ga2ca7d486d83fe555953a8c7876ee0d6e">MQTTStateCursor_t</a></div><div class="ttdeci">size_t MQTTStateCursor_t</div><div class="ttdoc">Cursor for iterating through state records.</div><div class="ttdef"><b>Definition:</b> core_mqtt_state.h:52</div></div>
+<div class="ttc" id="agroup__mqtt__constants_html_ga666ad78e7eaaffa51f5cab96201a9476"><div class="ttname"><a href="group__mqtt__constants.html#ga666ad78e7eaaffa51f5cab96201a9476">MQTT_STATE_CURSOR_INITIALIZER</a></div><div class="ttdeci">#define MQTT_STATE_CURSOR_INITIALIZER</div><div class="ttdoc">Initializer value for an MQTTStateCursor_t, indicating a search should start at the beginning of a st...</div><div class="ttdef"><b>Definition:</b> core_mqtt_state.h:46</div></div>
+<div class="ttc" id="agroup__mqtt__enum__types_html_gaba7ec045874a1c3432f99173367f735c"><div class="ttname"><a href="group__mqtt__enum__types.html#gaba7ec045874a1c3432f99173367f735c">MQTTStatus_t</a></div><div class="ttdeci">MQTTStatus_t</div><div class="ttdoc">Return codes from MQTT functions.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:115</div></div>
+<div class="ttc" id="agroup__mqtt__enum__types_html_ggaba7ec045874a1c3432f99173367f735ca484e062cb4f3fccc1858dd25cfeee056"><div class="ttname"><a href="group__mqtt__enum__types.html#ggaba7ec045874a1c3432f99173367f735ca484e062cb4f3fccc1858dd25cfeee056">MQTTSuccess</a></div><div class="ttdeci">@ MQTTSuccess</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:116</div></div>
+<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html">MQTTConnectInfo_t</a></div><div class="ttdoc">MQTT CONNECT packet parameters.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:161</div></div>
+<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html_a010f8f6993cbf8899648d5c515ff7884"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html#a010f8f6993cbf8899648d5c515ff7884">MQTTConnectInfo_t::pClientIdentifier</a></div><div class="ttdeci">const char * pClientIdentifier</div><div class="ttdoc">MQTT client identifier. Must be unique per client.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:176</div></div>
+<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html_a606e7765c4f2215fb2bf630f6eb9ff6b"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html#a606e7765c4f2215fb2bf630f6eb9ff6b">MQTTConnectInfo_t::cleanSession</a></div><div class="ttdeci">bool cleanSession</div><div class="ttdoc">Whether to establish a new, clean session or resume a previous session.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:166</div></div>
+<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html_a7d05d53261732ebdfbb9ee665a347591"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html#a7d05d53261732ebdfbb9ee665a347591">MQTTConnectInfo_t::keepAliveSeconds</a></div><div class="ttdeci">uint16_t keepAliveSeconds</div><div class="ttdoc">MQTT keep alive period.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:171</div></div>
+<div class="ttc" id="astruct_m_q_t_t_connect_info__t_html_a8077ef36ab318f3d35bee6f098fa54d4"><div class="ttname"><a href="struct_m_q_t_t_connect_info__t.html#a8077ef36ab318f3d35bee6f098fa54d4">MQTTConnectInfo_t::clientIdentifierLength</a></div><div class="ttdeci">uint16_t clientIdentifierLength</div><div class="ttdoc">Length of the client identifier.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:181</div></div>
+<div class="ttc" id="astruct_m_q_t_t_context__t_html"><div class="ttname"><a href="struct_m_q_t_t_context__t.html">MQTTContext_t</a></div><div class="ttdoc">A struct representing an MQTT connection.</div><div class="ttdef"><b>Definition:</b> core_mqtt.h:178</div></div>
+<div class="ttc" id="astruct_m_q_t_t_publish_info__t_html"><div class="ttname"><a href="struct_m_q_t_t_publish_info__t.html">MQTTPublishInfo_t</a></div><div class="ttdoc">MQTT PUBLISH packet parameters.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:231</div></div>
+<div class="ttc" id="astruct_m_q_t_t_publish_info__t_html_aa1c8954e83bfa678d1ff5429679d4e89"><div class="ttname"><a href="struct_m_q_t_t_publish_info__t.html#aa1c8954e83bfa678d1ff5429679d4e89">MQTTPublishInfo_t::dup</a></div><div class="ttdeci">bool dup</div><div class="ttdoc">Whether this is a duplicate publish message.</div><div class="ttdef"><b>Definition:</b> core_mqtt_serializer.h:245</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
