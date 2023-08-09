@@ -1,5 +1,7 @@
 # coreMQTT Client Library
 
+**[API Documentation Pages for current and previous releases of this library can be found here](https://freertos.github.io/coreMQTT/)**
+
 This repository contains the coreMQTT library that has been optimized for a low
 memory footprint. The coreMQTT library is compliant with the
 [MQTT 3.1.1](https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html)
