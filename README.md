@@ -47,7 +47,7 @@ preprocessor macro.
 **Thus, the MQTT library can be built by either**:
 
 - Defining a `core_mqtt_config.h` file in the application, and adding it to the
-  include directories list of the library  
+  include directories list of the library
   **OR**
 - Defining the `MQTT_DO_NOT_USE_CUSTOM_CONFIG` preprocessor macro for the
   library build.
