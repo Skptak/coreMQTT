@@ -1,5 +1,11 @@
 name: "CI Checks"
 
+env:
+  bashPass: \033[32;1mPASSED -
+  bashWarn: \033[33;1mWARNING -
+  bashFail: \033[31;1mFAILED -
+  bashEnd:  \033[0m
+
 on:
   push:
     branches: ["**"]
@@ -13,26 +19,35 @@ jobs:
     steps:
       - name: Clone This Repo
         uses: actions/checkout@v3
-      - name: Build
+
+      - env:
+          stepName: Build CoreMQTT
         run: |
+          echo "::group::${{ env.stepName }}"
           sudo apt-get install -y lcov
           cmake -S test -B build/ \
           -G "Unix Makefiles" \
           -DCMAKE_BUILD_TYPE=Debug \
           -DBUILD_CLONE_SUBMODULES=ON \
           -DCMAKE_C_FLAGS='--coverage -Wall -Wextra -Werror -DNDEBUG -DLIBRARY_LOG_LEVEL=LOG_DEBUG'
+          echo "::endgroup::"
           make -C build/ all
-      - name: Test
+          echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
+
+      - name: Run System Tests
+        run:  ctest --test-dir build -E system --output-on-failure
+
+      - env:
+          stepName: Run Line and Branch Coverage Check
         run: |
-          cd build/
-          ctest -E system --output-on-failure
-          cd ..
-      - name: Run Coverage
-        run: |
+          echo "::group::Build Coverage Target"
           make -C build/ coverage
+          echo "::endgroup::Generate Coverage Report"
           declare -a EXCLUDE=("\*test\*" "\*CMakeCCompilerId\*" "\*mocks\*")
           echo ${EXCLUDE[@]} | xargs lcov --rc lcov_branch_coverage=1 -r build/coverage.info -o build/coverage.info
+          echo "::endgroup::"
           lcov --rc lcov_branch_coverage=1 --list build/coverage.info
+
       - name: Check Coverage
         uses: FreeRTOS/CI-CD-Github-Actions/coverage-cop@CI-CD-Overhaul
         with:
