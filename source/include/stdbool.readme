@@ -20,8 +20,8 @@
 
 /* _Bool was introduced in C99. */
     #define bool     int
-    #define false    0
-    #define true     1
+    #define false    0U
+    #define true     1U
 
 #endif
 
