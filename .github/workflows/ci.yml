@@ -24,7 +24,8 @@ jobs:
           stepName: Build CoreMQTT
         run: |
           # ${{ env.stepName }}
-          echo "::group::${{ env.stepName }}"
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+
           sudo apt-get install -y lcov
           cmake -S test -B build/ \
           -G "Unix Makefiles" \
@@ -33,6 +34,7 @@ jobs:
           -DCMAKE_C_FLAGS='--coverage -Wall -Wextra -Werror -DNDEBUG -DLIBRARY_LOG_LEVEL=LOG_DEBUG'
           make -C build/ all
           echo "::endgroup::"
+
           echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
 
       - name: Run System Tests
@@ -43,10 +45,13 @@ jobs:
         run: |
           # ${{ env.stepName }}
           echo -e "::group::${{ env.bashInfo }} Build Coverage Target ${{ env.bashEnd }}"
+          # Build the coverage target
           make -C build/ coverage
+
           echo -e "::group::${{ env.bashInfo }} Generate Coverage Report ${{ env.bashEnd }}"
-          declare -a EXCLUDE=("\*test\*" "\*CMakeCCompilerId\*" "\*mocks\*")
-          echo ${EXCLUDE[@]} | xargs lcov --rc lcov_branch_coverage=1 -r build/coverage.info -o build/coverage.info
+          # Generate coverage report, excluding extra directories
+          lcov --rc lcov_branch_coverage=1 -r build/coverage.info -o build/coverage.info '*test*' '*CMakeCCompilerId*' '*mocks*'
+
           echo -e "::endgroup::${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
           lcov --rc lcov_branch_coverage=1 --list build/coverage.info
 
