@@ -30,6 +30,9 @@
 #ifndef CORE_MQTT_CONFIG_H_
 #define CORE_MQTT_CONFIG_H_
 
+/* core_mqtt.h must precede including this header. */
+#include "core_mqtt.h"
+
 /* Mock a network context for the CBMC proofs. */
 struct NetworkContext
 {
