@@ -27,13 +27,16 @@
  * @file mqtt_cbmc_state.c
  * @brief Implements the functions defined in mqtt_cbmc_state.h.
  */
+/* LibC includes */
+#include <stdint.h>
+#include <stdlib.h>
+
+
 #include "mqtt_cbmc_state.h"
 #include "core_mqtt.h"
 #include "event_callback_stub.h"
 #include "get_time_stub.h"
 #include "network_interface_stubs.h"
-#include <stdint.h>
-#include <stdlib.h>
 
 /* An exclusive default bound on the subscription count. Iterating over possibly
  * SIZE_MAX number of subscriptions does not add any value to the proofs. An

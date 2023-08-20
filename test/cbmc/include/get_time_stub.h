@@ -31,6 +31,9 @@
 #ifndef GET_TIME_STUB_H_
 #define GET_TIME_STUB_H_
 
+/* LibC Includes */
+#include <stdint.h>
+
 /**
  * Application defined callback to retrieve the current time in milliseconds.
  *

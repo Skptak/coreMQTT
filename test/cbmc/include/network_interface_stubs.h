@@ -32,6 +32,7 @@
 #define NETWORK_INTERFACE_STUBS_H_
 
 /* transport_interface.h must precede including this header. */
+#include "transport_interface.h"
 
 /**
  * @brief Application defined network interface receive function.

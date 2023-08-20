@@ -32,7 +32,8 @@
 
 #include <stdbool.h>
 
-/* mqtt.h must precede including this header. */
+/* core_mqtt.h must precede including this header. */
+#include "core_mqtt.h"
 
 #define IMPLIES( a, b ) ( !( a ) || ( b ) )
 
