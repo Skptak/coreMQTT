@@ -31,8 +31,7 @@
 #ifndef EVENT_CALLBACK_STUB_H_
 #define EVENT_CALLBACK_STUB_H_
 
-/* core_mqtt.h must precede including this header. */
-#include "core_mqtt.h"
+/* mqtt.h must precede including this header. */
 
 /**
  * @brief User defined callback for receiving incoming publishes and incoming
