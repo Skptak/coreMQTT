@@ -31,11 +31,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-
-#include "mqtt_cbmc_state.h"
 #include "core_mqtt.h"
 #include "event_callback_stub.h"
 #include "get_time_stub.h"
+#include "mqtt_cbmc_state.h"
 #include "network_interface_stubs.h"
 
 /* An exclusive default bound on the subscription count. Iterating over possibly
