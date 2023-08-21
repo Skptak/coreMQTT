@@ -61,7 +61,7 @@ GitHub provides additional document on
 
 Looking at the existing issues is a great way to find something to contribute
 on. As our projects, by default, use the default GitHub issue labels
-((enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at
+(enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at
 any ['help wanted'](https://github.com/FreeRTOS/coreMQTT/labels?q=help+wanted)
 issues is a great place to start.
 
