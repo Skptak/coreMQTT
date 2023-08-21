@@ -27,7 +27,8 @@ RUN apt-get clean \
     ruby \
     software-properties-common \
     tmux \
-    uncrustify \
+    fd-find \
+    dos2unix \
     && pip3 install -r requirements.txt \
     && wget --progress=dot:giga https://github.com/danmar/cppcheck/archive/2.6.tar.gz \
     && tar xvzf 2.6.tar.gz \
